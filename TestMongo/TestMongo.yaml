@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: testmongo-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    path: /mnt/disks/ssd1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: task-pv-claim
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testmongo-deployment
+  labels:
+    app: testmongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testmongo
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: testmongo
+    spec:
+      volumes:
+        - name: testmongo-volume
+          persistentVolumeClaim:
+            claimName: task-pv-claim
+      containers:
+        - name: testmongo
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: testmongo-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testmongo-service
+spec:
+  selector:
+    app: testmongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017

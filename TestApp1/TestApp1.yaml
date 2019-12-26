@@ -5,7 +5,12 @@ metadata:
   labels:
     app: testapp1
 spec:
-  replicas: 3
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: testapp1
@@ -16,7 +21,7 @@ spec:
     spec:
       containers:
         - name: testapp1
-          image: radumarinoiu/testapp1
+          image: radumarinoiu/testapp1:1577396931
           ports:
           - containerPort: 5000
 ---

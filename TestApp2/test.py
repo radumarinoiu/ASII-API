@@ -1,6 +1,5 @@
-import json
-
 import requests
+
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 
@@ -10,7 +9,7 @@ CORS(app)
 
 @app.route("/test", methods=["GET"])
 def test():
-    resp = requests.get("http://10.107.72.180/test")
+    resp = requests.get("http://testapp1-service:80/test")
     return jsonify({"response": "Service 2 Works!", "additional_data": resp.json()})
 
 

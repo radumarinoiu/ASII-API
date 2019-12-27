@@ -5,9 +5,11 @@ import subprocess
 if __name__ == '__main__':
     current_timestamp = int(time.time())
     parser = argparse.ArgumentParser()
-    parser.add_argument("working_path")
-    parser.add_argument("image_path")
-    parser.add_argument("image_tag", nargs="?", default=current_timestamp)
+    parser.add_argument("working_path")  # Directory that contains the project AND the Dockerfile
+    parser.add_argument("image_path")  # dockerhub_username/repository_name format
+    parser.add_argument("image_tag",  # leave empty for automatic versioning using current timestamp
+                        nargs="?",
+                        default=current_timestamp)
     args = parser.parse_args()
 
     subprocess.check_call([
@@ -26,4 +28,4 @@ if __name__ == '__main__':
             "docker", "push",
             "{}:latest".format(args.image_path)
         ])
-        print(current_timestamp)
+        print("Released version tag: " + str(current_timestamp))

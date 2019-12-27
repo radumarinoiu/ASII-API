@@ -4,6 +4,8 @@ metadata:
   name: testapp2-deployment
   labels:
     app: testapp2
+  annotations:
+    fluxcd.io/automated: "true"
 spec:
   replicas: 1
   strategy:

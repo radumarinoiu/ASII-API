@@ -1,3 +1,4 @@
 Flask
 Flask-SQLAlchemy
-Authlib==0.13
+Authlib
+pbkdf2

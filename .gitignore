@@ -125,3 +125,5 @@ dmypy.json
 
 .idea/
 ASII_OAuth_Server/website/db.sqlite
+
+venv*/

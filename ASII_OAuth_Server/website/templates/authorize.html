@@ -10,7 +10,8 @@
   {% if not user %}
   <p>You haven't logged in. Log in with:</p>
   <div>
-    <input type="text" name="username">
+    <input type="text" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password" minlength="8" required>
   </div>
   {% endif %}
   <br>

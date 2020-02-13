@@ -1,4 +1,7 @@
+import json
 import time
+import traceback
+
 from flask import Blueprint, request, session
 from flask import render_template, redirect, jsonify
 from werkzeug.security import gen_salt
@@ -117,6 +120,10 @@ def create_client():
     return redirect('/')
 
 
+# GET
+# http://localhost:5000/oauth/authorize?grant_type=authorization_code&response_type=code&scope=profile&state=asdfgh&client_id=trm4mcCRFXNjeDVnkS1sl9Zm
+# POST
+# http://callback_uri?code=HpLvmJLoCtHEQTErwLbmaerm0P3ejiW9kLFbEYPh4OR8NS5Q&state=asdfgh
 @bp.route('/oauth/authorize', methods=['GET', 'POST'])
 def authorize():
     user = current_user()
@@ -124,6 +131,7 @@ def authorize():
         try:
             grant = authorization.validate_consent_request(end_user=user)
         except OAuth2Error as error:
+            print(traceback.format_exc())
             return error.error
         return render_template('authorize.html', user=user, grant=grant)
     if not user and 'username' in request.form:
@@ -145,10 +153,12 @@ def issue_token():
 def revoke_token():
     return authorization.create_endpoint_response('revocation')
 
+
 @bp.route('/test', methods=['POST'])
 def test():
-    print(request.json())
+    print("Test:", json.dumps(request.json()))
     return jsonify({})
+
 
 @bp.route('/api/me')
 @require_oauth('profile')

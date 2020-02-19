@@ -28,6 +28,7 @@ class User(db.Model):
     # Method for providing a dictionary based on user info
     def as_dict(self):
         return {
+            "user_id": self.id,
             "username": self.username,
             "fullname": self.fullname,
             "email": self.email
@@ -38,6 +39,8 @@ class User(db.Model):
 @app.route("/users/username=<username>", methods=["GET"])
 def get_user_by_username(username):
     found_user = db.session.query(User).filter(User.username == username).first()
+    if not found_user:
+        return jsonify({"err": "User not found!"}), HTTPStatus.NOT_FOUND
     return jsonify(found_user.as_dict()), HTTPStatus.OK
 
 
@@ -45,6 +48,8 @@ def get_user_by_username(username):
 @app.route("/users/id=<user_id>", methods=["GET"])
 def get_user_by_id(user_id):
     found_user = db.session.query(User).filter(User.id == user_id).first()
+    if not found_user:
+        return jsonify({"err": "User not found!"}), HTTPStatus.NOT_FOUND
     return jsonify(found_user.as_dict()), HTTPStatus.OK
 
 
@@ -67,4 +72,4 @@ def post_user():
 if __name__ == '__main__':
     db.create_all()  # Creates the necessary tables for the declared classes (User)
     db.session.commit()
-    app.run("0.0.0.0", 5000)
+    app.run("0.0.0.0", 5002)

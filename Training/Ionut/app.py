@@ -8,11 +8,12 @@ app = Flask(__name__)
 app.secret_key = b"4sv4v64vsvws64"  # Random string, generat o singura data per aplicatie
 CORS(app)
 
-users_api_uri = "http://localhost:5002/users/"
+users_api_uri = "http://localhost:5002/users"
 
 
 class User(object):
-    def __init__(self, username, fullname, email):
+    def __init__(self, username, fullname, email, user_id=None):
+        self.user_id = user_id
         self.username = username
         self.fullname = fullname
         self.email = email
@@ -28,12 +29,14 @@ class User(object):
         return User(
             username=user_as_dict["username"],
             fullname=user_as_dict["fullname"],
-            email=user_as_dict["email"]
+            email=user_as_dict["email"],
+            user_id=user_as_dict.get("user_id")
         )
 
     # Method for providing a dictionary based on user info
     def as_dict(self):
         return {
+            "user_id": self.user_id,
             "username": self.username,
             "fullname": self.fullname,
             "email": self.email
@@ -52,7 +55,7 @@ def get_user_by_username(username):
             return jsonify("Invalid user data received from called API!"), HTTPStatus.FAILED_DEPENDENCY
         return jsonify(found_user.as_dict()), HTTPStatus.OK
     else:
-        return resp
+        return resp.content, resp.status_code
 
 
 # Route for obtaining users using their id
@@ -67,7 +70,7 @@ def get_user_by_id(user_id):
             return jsonify("Invalid user data received from called API!"), HTTPStatus.FAILED_DEPENDENCY
         return jsonify(found_user.as_dict()), HTTPStatus.OK
     else:
-        return resp
+        return resp.content, resp.status_code
 
 
 # Route for creating new users
@@ -78,9 +81,9 @@ def post_user():
     user_data = request.get_json()
     try:
         new_user = User(
-            username=user_data["username", None],
-            fullname=user_data["fullname", None],
-            email=user_data["email", None]
+            username=user_data["username"],
+            fullname=user_data["fullname"],
+            email=user_data["email"]
         )
     except KeyError:
         return jsonify("Invalid user data received in request!"), HTTPStatus.BAD_REQUEST
@@ -89,7 +92,7 @@ def post_user():
     if resp.status_code == HTTPStatus.CREATED:
         return jsonify(resp.json()), resp.status_code
     else:
-        return resp
+        return resp.content, resp.status_code
 
 
 if __name__ == '__main__':

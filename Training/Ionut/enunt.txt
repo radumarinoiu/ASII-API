@@ -1,1 +1,15 @@
 Flask Data Processing Server, access external APIs using python's requests package
+
+Am furnizat un exemplu minimal de 'gateway' pentru un API cu obiecte de tip User.
+
+Cerinta este sa creezi rutele necesare obtinerii cursului RON -> VALUTA,
+unde VALUTA va fi primita ca si parametru in URL. Pentru obtinerea datelor
+poti folosi "https://api.exchangeratesapi.io/latest?base=RON".
+Pe langa asta, va fi necesar sa implementezi si o ruta pentru conversia unei
+sume (suma) din orice valuta (v1) in orice valuta (v2),
+suma, v1 si v2 fiind primite de la utilizator prin parametri in URL
+(evident valutele vor face parte din cele disponibile la API-ul dat)
+
+Dupa ce Iuliana implementeaza task-ul ei, trebuie sa realizezi cateva rute noi
+prin care sa poti obtine cardurile unui user, sa poti initia un transfer de bani de la
+un card la altul, toate acestea folosind doar requesturi http catre API-ul Iulianei.

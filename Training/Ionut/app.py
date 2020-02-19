@@ -5,10 +5,13 @@ import requests  # A nu se confunda cu request de la flask
 from http import HTTPStatus
 
 app = Flask(__name__)
-app.secret_key = b"4sv4v64vsvws64"  # Random string, generat o singura data per aplicatie
+
+# Random string, generat o singura data per aplicatie
+app.secret_key = b"4sv4v64vsvws64"
 CORS(app)
 
 users_api_uri = "http://localhost:5002/users"
+exchange_api = 'https://api.exchangeratesapi.io/latest?base=RON'
 
 
 class User(object):
@@ -20,12 +23,14 @@ class User(object):
 
     # Method for providing a string based on user info
     def __repr__(self):
-        return "<User(username={}, fullname={}, email={})>".format(self.username, self.fullname, self.email)
+        return "<User(username={}, fullname={}, email={})>".format(
+            self.username, self.fullname, self.email)
 
     # Method for creating a user object based on a user dictionary
     @staticmethod
     def from_dict(user_as_dict):
-        # This will raise an EXCEPTION if the user_as_dict does not contain all the required fields
+        # This will raise an EXCEPTION if the user_as_dict does not contain all
+        # the required fields
         return User(
             username=user_as_dict["username"],
             fullname=user_as_dict["fullname"],
@@ -52,7 +57,8 @@ def get_user_by_username(username):
         try:
             found_user = User.from_dict(resp.json())
         except KeyError:
-            return jsonify("Invalid user data received from called API!"), HTTPStatus.FAILED_DEPENDENCY
+            return jsonify("Invalid user data received from called API!"),\
+                   HTTPStatus.FAILED_DEPENDENCY
         return jsonify(found_user.as_dict()), HTTPStatus.OK
     else:
         return resp.content, resp.status_code
@@ -67,7 +73,8 @@ def get_user_by_id(user_id):
         try:
             found_user = User.from_dict(resp.json())
         except KeyError:
-            return jsonify("Invalid user data received from called API!"), HTTPStatus.FAILED_DEPENDENCY
+            return jsonify("Invalid user data received from called API!"),\
+                   HTTPStatus.FAILED_DEPENDENCY
         return jsonify(found_user.as_dict()), HTTPStatus.OK
     else:
         return resp.content, resp.status_code
@@ -77,7 +84,8 @@ def get_user_by_id(user_id):
 @app.route("/", methods=["POST"])
 def post_user():
     if not request.is_json:
-        return jsonify({"err": "No JSON content received."}), HTTPStatus.BAD_REQUEST
+        return jsonify({"err": "No JSON content received."}),\
+               HTTPStatus.BAD_REQUEST
     user_data = request.get_json()
     try:
         new_user = User(
@@ -86,13 +94,31 @@ def post_user():
             email=user_data["email"]
         )
     except KeyError:
-        return jsonify("Invalid user data received in request!"), HTTPStatus.BAD_REQUEST
+        return jsonify("Invalid user data received in request!"),\
+               HTTPStatus.BAD_REQUEST
     resp = requests.post(
         "{}".format(users_api_uri), json=new_user.as_dict())
     if resp.status_code == HTTPStatus.CREATED:
         return jsonify(resp.json()), resp.status_code
     else:
         return resp.content, resp.status_code
+
+
+@app.route('/ron_in_<valuta>')
+def ron_in_valuta(valuta):
+    response = requests.get(exchange_api)
+
+    if response.status_code == HTTPStatus.OK:
+        to_json = response.json()
+        try:
+            return jsonify('RON -> {} : {}'.format(
+                valuta.upper(), to_json['rates'][valuta.upper()]))
+        except KeyError:
+            return jsonify('Eu n-am auzit de valuta asta pana acum'),\
+                   HTTPStatus.BAD_REQUEST
+    else:
+        return jsonify('Felicitari! Ai reusit sa-l crapi'), \
+               response.status_code
 
 
 if __name__ == '__main__':

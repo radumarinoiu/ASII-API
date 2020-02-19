@@ -1,0 +1,12 @@
+Flask Database Access API with a sqlite database, access it from python using SQLAlchemy package
+
+
+Am furnizat un exemplu minimal de management printr-un API a unor obiecte de tip user folosind o baza de date sqlite.
+
+Cerinta este sa realizezi o noua tabela 'credit cards' in care sa ai salvate carduri de credit ale
+userilor (RELATIONAL, cum ai invatat la bd), si fiecare card sa aiba un numar de card, data de expirare si
+fonduri (nu conteaza valorile, doar sa fie cat de cat apropiate de ceva real).
+
+Pe langa asta, ar trebui sa ai o ruta pentru transferul de fonduri de la un card la altul, in mod atomic,
+adica asigurandu-te ca operatia fie va fi completa (fonduri scazute la cardul care trimite bani,
+fonduri adaugate la cardul care primeste), fie va fi anulata (fondurile raman la fel la ambele carduri).

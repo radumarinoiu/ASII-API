@@ -20,6 +20,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     fullname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    cards = db.relationship('CreditCards', backref='users', lazy=True)
 
     # Method for providing a string based on user info
     def __repr__(self):
@@ -32,6 +33,25 @@ class User(db.Model):
             "username": self.username,
             "fullname": self.fullname,
             "email": self.email
+        }
+
+
+class CreditCard(db.Model):
+    __table__ = "cards"
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    card_number = db.Column(db.String, nullable=False)
+    funds = db.Column(db.Numeric(10, 2), nullable=False)
+    id_owner = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    def __repr__(self):
+        return "<CreditCard(card_number={},funds={},id_owner={})>".format(self.card_number, self.funds, self.id_owner)
+
+    def as_dict(self):
+        return{
+            "id": self.id,
+            "card_number": self.card_number,
+            "funds": self.funds,
+            "id_owner": self.id_owner
         }
 
 
@@ -67,6 +87,55 @@ def post_user():
     db.session.add(new_user)
     db.session.commit()
     return jsonify(new_user.as_dict()), HTTPStatus.CREATED
+
+
+@app.route("/credit_cards", methods=["POST"])
+def post_card():
+    if not request.is_json:
+        return jsonify({"err": "No JSON content received."}), HTTPStatus.BAD_REQUEST
+    card_data = request.get_json()
+    new_card = CreditCard(
+        card_number=card_data.get("card_number"),
+        funds=card_data.get("funds"),
+        id_owner=card_data.get("id_owner")
+    )
+    db.session.add(new_card)
+    db.session.commit()
+    return jsonify(new_card.as_dict()), HTTPStatus.CREATED
+
+
+@app.route("/credit_cards/add_funds/card_number=<credit_card_number>", methods=["PUT"])
+def put_add_funds(credit_card_number, value):
+    found_card = db.session.query(CreditCard).filter(CreditCard.card_number == credit_card_number).first()
+    if not found_card:
+        return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
+    else:
+        CreditCard.funds = CreditCard.funds + float(value)
+
+
+@app.route("/credit_cards/take_funds/card_number=<credit_card_number>", methods=["PUT"])
+def put_take_funds(credit_card_number, value):
+    found_card = db.session.query(CreditCard).filter(CreditCard.card_number == credit_card_number).first()
+    if not found_card:
+        return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
+    else:
+        CreditCard.funds = CreditCard.funds + float(value)
+
+
+@app.route("/credit_cards/card_number=<credit_card_number>", methods=["GET"])
+def get_credit_card_by_number(credit_card_number):
+    found_card = db.session.query(CreditCard).filter(CreditCard.card_number == credit_card_number).first()
+    if not found_card:
+        return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
+    return jsonify(found_card.as_dict()), HTTPStatus.OK
+
+
+@app.route("/credit_cards/id_owner=<owner>", methods=["GET"])
+def get_credit_card_by_id_owner(owner):
+    found_card = db.session.query(CreditCard).filter(CreditCard.id_owner == owner).first()
+    if not found_card:
+        return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
+    return jsonify(found_card.as_dict()), HTTPStatus.OK
 
 
 if __name__ == '__main__':

@@ -11,7 +11,6 @@ app.secret_key = b"4sv4v64vsvws64"
 CORS(app)
 
 users_api_uri = "http://localhost:5002/users"
-exchange_api = 'https://api.exchangeratesapi.io/latest?base=RON'
 
 
 class User(object):
@@ -104,20 +103,32 @@ def post_user():
         return resp.content, resp.status_code
 
 
-@app.route('/ron_in_<valuta>')
-def ron_in_valuta(valuta):
+@app.route("/<from_currency>_to_<to_currency>")
+def get_exchange_rate(from_currency, to_currency):
+    """Get the exchange rate from the currency of the first parameter to the
+     currency of the second parameter."""
+    from_currency = from_currency.upper()
+    to_currency = to_currency.upper()
+    exchange_api = "https://api.exchangeratesapi.io/latest?base={}".format(
+        from_currency)
+
+    # Verify that the first currency is correct
     response = requests.get(exchange_api)
+    if response.status_code == HTTPStatus.BAD_REQUEST:
+        return jsonify("Unknown currency: {}".format(from_currency)), \
+               HTTPStatus.BAD_REQUEST
 
     if response.status_code == HTTPStatus.OK:
         to_json = response.json()
         try:
-            return jsonify('RON -> {} : {}'.format(
-                valuta.upper(), to_json['rates'][valuta.upper()]))
-        except KeyError:
-            return jsonify('Eu n-am auzit de valuta asta pana acum'),\
+            return jsonify({"value": to_json["rates"][to_currency],
+                            "from": "{}".format(from_currency),
+                            "to": to_currency}), HTTPStatus.OK
+        except KeyError:    # The second currency isn't correct
+            return jsonify("Unknown currency: {}".format(to_currency)),\
                    HTTPStatus.BAD_REQUEST
     else:
-        return jsonify('Felicitari! Ai reusit sa-l crapi'), \
+        return jsonify("Something went really wrong!"),\
                response.status_code
 
 

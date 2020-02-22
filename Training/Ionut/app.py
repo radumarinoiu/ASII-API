@@ -115,7 +115,7 @@ def get_exchange_rate(from_currency, to_currency):
     # Verify that the first currency is correct
     response = requests.get(exchange_api)
     if response.status_code == HTTPStatus.BAD_REQUEST:
-        return jsonify("Unknown currency: {}".format(from_currency)), \
+        return jsonify({"err": "Unknown currency: {}".format(from_currency)}),\
                HTTPStatus.BAD_REQUEST
 
     if response.status_code == HTTPStatus.OK:
@@ -125,10 +125,10 @@ def get_exchange_rate(from_currency, to_currency):
                             "from": "{}".format(from_currency),
                             "to": to_currency}), HTTPStatus.OK
         except KeyError:    # The second currency isn't correct
-            return jsonify("Unknown currency: {}".format(to_currency)),\
-                   HTTPStatus.BAD_REQUEST
+            return jsonify({"err": "Unknown currency: {}".format(
+                to_currency)}), HTTPStatus.BAD_REQUEST
     else:
-        return jsonify("Something went really wrong!"),\
+        return jsonify({"err": "Something went really wrong!"}),\
                response.status_code
 
 

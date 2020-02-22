@@ -115,21 +115,39 @@ def get_exchange_rate(from_currency, to_currency):
     # Verify that the first currency is correct
     response = requests.get(exchange_api)
     if response.status_code == HTTPStatus.BAD_REQUEST:
-        return jsonify({"err": "Unknown currency: {}".format(from_currency)}),\
-               HTTPStatus.BAD_REQUEST
+        return jsonify({"err": "Currency not supported: {}".format(
+            from_currency)}), HTTPStatus.BAD_REQUEST
 
     if response.status_code == HTTPStatus.OK:
         to_json = response.json()
         try:
             return jsonify({"value": to_json["rates"][to_currency],
-                            "from": "{}".format(from_currency),
+                            "from": from_currency,
                             "to": to_currency}), HTTPStatus.OK
         except KeyError:    # The second currency isn't correct
-            return jsonify({"err": "Unknown currency: {}".format(
+            return jsonify({"err": "Currency not supported: {}".format(
                 to_currency)}), HTTPStatus.BAD_REQUEST
     else:
         return jsonify({"err": "Something went really wrong!"}),\
                response.status_code
+
+
+@app.route("/<from_currency>_to_<to_currency>=<amount>")
+def convert_currencies(from_currency, to_currency, amount):
+    """Convert the amount of money in the form of the first currency to the
+     second one."""
+    exchange_rate, err_code = get_exchange_rate(from_currency, to_currency)
+
+    try:
+        converted_amount = exchange_rate.json['value'] * float(amount)
+    except KeyError:
+        return exchange_rate    # Return a Response object
+
+    return jsonify({"converted": converted_amount,
+                    "amount": amount,
+                    "exchange_rate": exchange_rate.json['value'],
+                    "to": to_currency.upper(),
+                    "from": from_currency.upper()}), HTTPStatus.OK
 
 
 if __name__ == '__main__':

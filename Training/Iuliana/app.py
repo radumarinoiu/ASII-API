@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 from http import HTTPStatus
 
+import requests
+
 app = Flask(__name__)
 app.secret_key = b"q3w35g223523g52v32"  # Random string, generat o singura data per aplicatie
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"  # Baza de date e salvata in memorie, nu pe disk
@@ -20,7 +22,6 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     fullname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
-    cards = db.relationship('CreditCards', backref='users', lazy=True)
 
     # Method for providing a string based on user info
     def __repr__(self):
@@ -37,7 +38,7 @@ class User(db.Model):
 
 
 class CreditCard(db.Model):
-    __table__ = "cards"
+    __tablename__ = "cards"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     card_number = db.Column(db.String, nullable=False)
     funds = db.Column(db.Numeric(10, 2), nullable=False)
@@ -105,7 +106,7 @@ def post_card():
 
 
 @app.route("/credit_cards/add_funds/card_number=<credit_card_number>", methods=["PUT"])
-def put_add_funds(credit_card_number, value):
+def add_funds(credit_card_number, value):
     found_card = db.session.query(CreditCard).filter(CreditCard.card_number == credit_card_number).first()
     if not found_card:
         return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
@@ -114,7 +115,7 @@ def put_add_funds(credit_card_number, value):
 
 
 @app.route("/credit_cards/take_funds/card_number=<credit_card_number>", methods=["PUT"])
-def put_take_funds(credit_card_number, value):
+def take_funds(credit_card_number, value):
     found_card = db.session.query(CreditCard).filter(CreditCard.card_number == credit_card_number).first()
     if not found_card:
         return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
@@ -136,6 +137,26 @@ def get_credit_card_by_id_owner(owner):
     if not found_card:
         return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
     return jsonify(found_card.as_dict()), HTTPStatus.OK
+
+
+@app.route("/credit_cards/transfer", methods=["PATCH"])
+def transfer():
+    if not request.is_json:
+        return jsonify({"err": "No JSON content received."}), HTTPStatus.NOT_FOUND
+    data = request.get_json()
+    card_number_1 = data["card1"]
+    card_number_2 = data["card2"]
+    amount = data["amount"]
+    # resp = requests.get("http://localhost:5002/credit_cards/card_number={}".format(card1))
+    # if resp.status_code != HTTPStatus.OK:
+    #     return jsonify({"err": "Failed getting card1"}), resp.status_code
+    card1 = db.session.query(CreditCard).filter(CreditCard.card_number == card_number_1).first()
+    card2 = db.session.query(CreditCard).filter(CreditCard.card_number == card_number_2).first()
+    if card1.funds < amount:
+        return jsonify({"err": "Not enough funds to make the transfer!"}), HTTPStatus.BAD_REQUEST
+    card1.funds -= amount
+    card2.funds += amount
+    db.session.commit()
 
 
 if __name__ == '__main__':

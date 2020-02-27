@@ -39,9 +39,10 @@ class User(db.Model):
 
 class CreditCard(db.Model):
     __tablename__ = "cards"
+
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     card_number = db.Column(db.String, nullable=False)
-    funds = db.Column(db.Numeric(10, 2), nullable=False)
+    funds = db.Column(db.Float, nullable=False)
     id_owner = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def __repr__(self):
@@ -96,9 +97,9 @@ def post_card():
         return jsonify({"err": "No JSON content received."}), HTTPStatus.BAD_REQUEST
     card_data = request.get_json()
     new_card = CreditCard(
-        card_number=card_data.get("card_number"),
-        funds=card_data.get("funds"),
-        id_owner=card_data.get("id_owner")
+        card_number=card_data.get("card_number", None),
+        funds=card_data.get("funds", None),
+        id_owner=card_data.get("id_owner", None)
     )
     db.session.add(new_card)
     db.session.commit()
@@ -147,9 +148,6 @@ def transfer():
     card_number_1 = data["card1"]
     card_number_2 = data["card2"]
     amount = data["amount"]
-    # resp = requests.get("http://localhost:5002/credit_cards/card_number={}".format(card1))
-    # if resp.status_code != HTTPStatus.OK:
-    #     return jsonify({"err": "Failed getting card1"}), resp.status_code
     card1 = db.session.query(CreditCard).filter(CreditCard.card_number == card_number_1).first()
     card2 = db.session.query(CreditCard).filter(CreditCard.card_number == card_number_2).first()
     if card1.funds < amount:
@@ -157,6 +155,7 @@ def transfer():
     card1.funds -= amount
     card2.funds += amount
     db.session.commit()
+    return jsonify({}), HTTPStatus.CREATED
 
 
 if __name__ == '__main__':

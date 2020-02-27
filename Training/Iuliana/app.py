@@ -1,16 +1,21 @@
 from flask import Flask, jsonify, redirect, request, session
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, event
 
 from http import HTTPStatus
 
 import requests
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.secret_key = b"q3w35g223523g52v32"  # Random string, generat o singura data per aplicatie
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"  # Baza de date e salvata in memorie, nu pe disk
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sqlite.db"  # Baza de date e salvata in memorie, nu pe disk
 CORS(app)
 db = SQLAlchemy(app)
+
+
+def _fk_pragma_on_connect(dbapi_con, con_record):
+    dbapi_con.execute('pragma foreign_keys=ON')
 
 
 class User(db.Model):
@@ -22,6 +27,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     fullname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    cards = db.relationship("CreditCard")
 
     # Method for providing a string based on user info
     def __repr__(self):
@@ -42,11 +48,12 @@ class CreditCard(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     card_number = db.Column(db.String, nullable=False)
-    funds = db.Column(db.Float, nullable=False)
+    funds = db.Column(db.Integer, nullable=False)
     id_owner = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def __repr__(self):
-        return "<CreditCard(card_number={},funds={},id_owner={})>".format(self.card_number, self.funds, self.id_owner)
+        return "<CreditCard(card_number={},funds={},id_owner={})>".format(
+            self.card_number, float(self.funds)/100, self.id_owner)
 
     def as_dict(self):
         return{
@@ -98,11 +105,14 @@ def post_card():
     card_data = request.get_json()
     new_card = CreditCard(
         card_number=card_data.get("card_number", None),
-        funds=card_data.get("funds", None),
+        funds=int(card_data.get("funds", 0)*100),
         id_owner=card_data.get("id_owner", None)
     )
     db.session.add(new_card)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:
+        return jsonify({"err": "Invalid card owner"}), HTTPStatus.BAD_REQUEST
     return jsonify(new_card.as_dict()), HTTPStatus.CREATED
 
 
@@ -112,7 +122,7 @@ def add_funds(credit_card_number, value):
     if not found_card:
         return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
     else:
-        CreditCard.funds = CreditCard.funds + float(value)
+        CreditCard.funds = CreditCard.funds + int(value*100)
 
 
 @app.route("/credit_cards/take_funds/card_number=<credit_card_number>", methods=["PUT"])
@@ -121,7 +131,7 @@ def take_funds(credit_card_number, value):
     if not found_card:
         return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
     else:
-        CreditCard.funds = CreditCard.funds + float(value)
+        CreditCard.funds = CreditCard.funds + int(value*100)
 
 
 @app.route("/credit_cards/card_number=<credit_card_number>", methods=["GET"])
@@ -134,10 +144,10 @@ def get_credit_card_by_number(credit_card_number):
 
 @app.route("/credit_cards/id_owner=<owner>", methods=["GET"])
 def get_credit_card_by_id_owner(owner):
-    found_card = db.session.query(CreditCard).filter(CreditCard.id_owner == owner).first()
-    if not found_card:
+    found_cards = db.session.query(CreditCard).filter(CreditCard.id_owner == owner)
+    if not found_cards:
         return jsonify({"err": "Card not found!"}), HTTPStatus.NOT_FOUND
-    return jsonify(found_card.as_dict()), HTTPStatus.OK
+    return jsonify([found_card.as_dict() for found_card in found_cards]), HTTPStatus.OK
 
 
 @app.route("/credit_cards/transfer", methods=["PATCH"])
@@ -147,7 +157,8 @@ def transfer():
     data = request.get_json()
     card_number_1 = data["card1"]
     card_number_2 = data["card2"]
-    amount = data["amount"]
+    amount = int(data["amount"]*100)
+    print(amount)
     card1 = db.session.query(CreditCard).filter(CreditCard.card_number == card_number_1).first()
     card2 = db.session.query(CreditCard).filter(CreditCard.card_number == card_number_2).first()
     if card1.funds < amount:
@@ -159,6 +170,7 @@ def transfer():
 
 
 if __name__ == '__main__':
+    event.listen(db.engine, 'connect', _fk_pragma_on_connect)
     db.create_all()  # Creates the necessary tables for the declared classes (User)
     db.session.commit()
     app.run("0.0.0.0", 5002)

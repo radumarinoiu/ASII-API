@@ -127,3 +127,5 @@ dmypy.json
 ASII_OAuth_Server/website/db.sqlite
 
 venv*/
+
+Training/Iuliana/sqlite.db

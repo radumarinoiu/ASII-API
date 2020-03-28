@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Register</title>
+    <link rel="stylesheet" href="front.css">
+</head>
+<body>
+<div>
+  <form class="headerForm">
+    <img src="asii_logo.png" alt="ASII LOGO" class="logo"><br>
+    <button type="button" onclick="openLogIn()" style="width:auto;">Log In</button>
+    <button type="button" onclick="openRegister()" style="width:auto;">Register</button>
+    <!-- form for login -->
+    <span id="login" class="popup">
+      <form><br><br>
+        <label for="email">Email address</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="pass">Password</label>
+        <input type="password" id="pass" name="password" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n]).*$"
+          title="Must contain at least one number, at least one special character and at least 8 or more characters" required><br>
+        <button type="submit">Submit</button>
+        <a href="">Forgot password?</a>  
+      </form>
+    </span>
+    <!-- form for register -->
+    <span id="register" class="popup">
+      <form><br><br>
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" name="firstname" required><br><br>
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" name="lastname" required><br><br>
+        <label for="email">Email address</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="pass">Password</label>
+        <input type="password" id="pass1" name="password" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n]).*$"
+          title="Must contain at least one number, at least one special character and at least 8 or more characters" required><br><br>
+        <label for="pass">Confirm password</label>
+        <input type="password" id="pass2" name="password" onfocus="confirmPass()" onfocusout="confirmPass()" required>
+        <p id="replayPass"></p>   
+        <button type="submit">Submit</button>
+        </form>
+      </span>
+  </form>
+</div>
+
+<script>
+function openLogIn(){
+    document.getElementById('login').style.display='block';
+    document.getElementById('register').style.display='none';
+  }
+function openRegister(){
+    document.getElementById('register').style.display='block';
+    document.getElementById('login').style.display='none';
+  }
+function confirmPass() {
+  var txt = "Passwords match!";
+  if (document.getElementById("pass1").value!=document.getElementById("pass2").value) {
+    txt = "Passwords doesn't match!";
+  }
+  document.getElementById("replayPass").innerHTML = txt;
+}
+</script>
+
+</body>
+</html>

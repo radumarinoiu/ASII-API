@@ -19,8 +19,8 @@ button[type=button]:hover{
 }
 input[type=text], select, input[type=password]{
   width: 100%;
-  padding: 8px;
-  margin: 8px;
+  padding: 9px;
+  margin: 0 px;
   display: inline-block;
   box-sizing: border-box;
   border: none;

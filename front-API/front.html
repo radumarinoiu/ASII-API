@@ -11,14 +11,13 @@
     <img src="asii_logo.png" alt="ASII LOGO" class="logo"><br>
     <button type="button" onclick="openLogIn()" style="width:auto;">Log In</button>
     <button type="button" onclick="openRegister()" style="width:auto;">Register</button>
-    <!-- form for login -->
+    <!-- form for log in -->
     <span id="login" class="popup">
       <form><br><br>
         <label for="email">Email address</label>
         <input type="text" id="email" name="email" required><br><br>
         <label for="pass">Password</label>
-        <input type="password" id="pass" name="password" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n]).*$"
-          title="Must contain at least one number, at least one special character and at least 8 or more characters" required><br>
+        <input type="password" id="pass" name="password" required><br>
         <button type="submit">Submit</button>
         <a href="">Forgot password?</a>  
       </form>
@@ -34,9 +33,9 @@
         <input type="text" id="email" name="email" required><br><br>
         <label for="pass">Password</label>
         <input type="password" id="pass1" name="password" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n]).*$"
-          title="Must contain at least one number, at least one special character and at least 8 or more characters" required><br><br>
+          title="Must contain at least one number, at least one special character and at least 8  characters" required><br><br>
         <label for="pass">Confirm password</label>
-        <input type="password" id="pass2" name="password" onfocus="confirmPass()" onfocusout="confirmPass()" required>
+        <input type="password" id="pass2" name="password" oninput="confirmPass()" required>
         <p id="replayPass"></p>   
         <button type="submit">Submit</button>
         </form>
@@ -45,20 +44,23 @@
 </div>
 
 <script>
+//function which open Log in form and close Register form
 function openLogIn(){
     document.getElementById('login').style.display='block';
     document.getElementById('register').style.display='none';
   }
+//function which open Register form and close Log in form
 function openRegister(){
     document.getElementById('register').style.display='block';
     document.getElementById('login').style.display='none';
   }
+//function to confirm that the both password are the same in register
 function confirmPass() {
-  var txt = "Passwords match!";
   if (document.getElementById("pass1").value!=document.getElementById("pass2").value) {
     txt = "Passwords doesn't match!";
+    document.getElementById("replayPass").innerText = txt;
   }
-  document.getElementById("replayPass").innerHTML = txt;
+  else document.getElementById("replayPass").innerText ='';
 }
 </script>
 

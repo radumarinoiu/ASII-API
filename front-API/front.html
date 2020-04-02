@@ -30,13 +30,16 @@
         <label for="lname">Last Name</label>
         <input type="text" id="lname" name="lastname" required><br><br>
         <label for="email">Email address</label>
-        <input type="text" id="email" name="email" required><br><br>
+        <input type="text" id="email" name="email" oninput="validateRegexEmail()" required><br><br>
         <label for="pass">Password</label>
-        <input type="password" id="pass1" name="password" pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n]).*$"
-          title="Must contain at least one number, at least one special character and at least 8  characters" required><br><br>
+        <input type="password" id="pass1" name="password" pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+          title="Must contain at least one number, at least one special character and at least 8  characters" 
+          oninput="validateRegexPass()" oninput="matchingPass()" required><br><br>
         <label for="pass">Confirm password</label>
-        <input type="password" id="pass2" name="password" oninput="confirmPass()" required>
-        <p id="replayPass"></p>   
+        <input type="password" id="pass2" name="password" oninput="matchingPass()" required>
+        <p id="regexEmail"></p>
+        <p id="regexPass"></p>   
+        <p id="matchingPass"></p>
         <button type="submit">Submit</button>
         </form>
       </span>
@@ -54,13 +57,31 @@ function openRegister(){
     document.getElementById('register').style.display='block';
     document.getElementById('login').style.display='none';
   }
-//function to confirm that the both password are the same in register
-function confirmPass() {
+//function to validate email
+function validateRegexEmail(){
+  var myInput=document.getElementById("email");
+  if(!myInput.value.match(/[.+@.+\..+]/g))
+    document.getElementById("regexEmail").innerHTML='Email is not valid.<br>';
+}
+//function which confirm that the both password are the same in register
+function matchingPass() {
   if (document.getElementById("pass1").value!=document.getElementById("pass2").value) {
-    txt = "Passwords doesn't match!";
-    document.getElementById("replayPass").innerText = txt;
+    txt = "Passwords don't match!";
+    document.getElementById("matchingPass").innerText = txt;
   }
-  else document.getElementById("replayPass").innerText ='';
+  else document.getElementById("matchingPass").innerText ='';
+}
+//function to verifing regex password
+function validateRegexPass(){
+  var myInput= document.getElementById("pass1");
+  txt = '';
+  if(!myInput.value.match(/[0-9]/g))
+    txt += 'Password must contain a number.<br>'; 
+  if(!myInput.value.match(/[#?!@$%^_&*-]/g))
+    txt += 'Password must contain a symbol.<br>';
+  if(myInput.value.length < 8)
+    txt += 'Password must have 8 characters.';
+  document.getElementById("regexPass").innerHTML=txt;
 }
 </script>
 

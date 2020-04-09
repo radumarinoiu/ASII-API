@@ -7,7 +7,7 @@
 </head>
 <body>
 <!-- form for register -->
-<div>
+<div class="container">
     <img src="logo.png" alt="ASII LOGO" class="logo">
     <label for="UserId">User Id</label>
     <input type="text" id="UserId" name="UserId" required><br><br>
@@ -37,7 +37,6 @@ function validateRegexPass(){
     else if(myInput.value.length < 8 && (!myInput.value.match(/[0-9]/g) || !myInput.value.match(/[#?!@$%^_&*-]/g)))
     txt += 'Password must have 8 characters.';
   document.getElementById("regexPass").innerHTML=txt;
-
 }
 </script>
 </body>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Register</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+<!-- form for register -->
+<div>
+    <img src="logo.png" alt="ASII LOGO" class="logo">
+    <label for="UserId">User Id</label>
+    <input type="text" id="UserId" name="UserId" required><br><br>
+    <label for="pass">Password</label>
+    <input type="password" id="pass1" name="password" pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+        title="Must contain at least one number, at least one special character and at least 8  characters" 
+        oninput="validateRegexPass()" required>
+    <p id="regexEmail" class="validate"></p>
+    <p id="regexPass" class="validate"></p>   
+    <p id="matchingPass" class="validate"></p>
+    <button type="submit">Login</button>
+</div>
+
+<script>
+//function to verifing regex password
+function validateRegexPass(){
+  var myInput= document.getElementById("pass1");
+  txt = '';
+  if(!myInput.value.match(/[0-9]/g))
+    txt += '<hr>Password must contain a number.<br>'; 
+  if(!myInput.value.match(/[#?!@$%^_&*-]/g) && myInput.value.match(/[0-9]/g))
+    txt += '<hr>Password must contain a symbol.<br>';
+    else if(!myInput.value.match(/[#?!@$%^_&*-]/g) && !myInput.value.match(/[0-9]/g))
+            txt += 'Password must contain a symbol.<br>';
+  if(myInput.value.length < 8 && (myInput.value.match(/[0-9]/g) && myInput.value.match(/[#?!@$%^_&*-]/g)))
+    txt += '<hr>Password must have 8 characters.';
+    else if(myInput.value.length < 8 && (!myInput.value.match(/[0-9]/g) || !myInput.value.match(/[#?!@$%^_&*-]/g)))
+    txt += 'Password must have 8 characters.';
+  document.getElementById("regexPass").innerHTML=txt;
+
+}
+</script>
+</body>
+</html>

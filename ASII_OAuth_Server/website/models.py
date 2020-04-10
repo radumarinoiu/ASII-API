@@ -15,6 +15,19 @@ class User(db.Model):
     username = db.Column(db.String(40), unique=True)
     email = db.Column(db.String(40))
     password = db.Column(db.String())
+    firstname = db.Column(db.String(40))
+    lastname = db.Column(db.String(40))
+    phone = db.Column(db.String(10))
+    verified = db.Column(db.Boolean())
+
+    # Do what you want with this
+    asii_members_data = db.Column(db.JSON(
+        {
+            "profilePhoto": db.String(),
+            "role": db.String(),
+            "departament": db.String()
+        }
+    ))
 
     def __str__(self):
         return self.username

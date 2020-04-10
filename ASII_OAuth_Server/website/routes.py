@@ -11,7 +11,6 @@ from pbkdf2 import crypt
 from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
 
-
 bp = Blueprint(__name__, 'home')
 
 
@@ -43,15 +42,33 @@ def register():
         password = request.form.get("password")
         password2 = request.form.get("password2")
         email = request.form.get("email")
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
+        phone = request.form.get("phone")
+        profile_photo = request.form.get("profilePhoto")
+        role = request.form.get("role")
+        departament = request.form.get("departament")
+
         if len(password) < 8:
             return redirect("/")
         if password != password2:
             return redirect("/")
+
         user = User(
             username=username,
             password=crypt(password),
-            email=email
+            email=email,
+            firstname=firstname,
+            lastname=lastname,
+            phone=phone,
+            verified=False,  # By default    =>  you should validate the user!
+            asii_members_data={
+                "profilePhoto": profile_photo,
+                "role": role,
+                "departament": departament
+            }
         )
+
         db.session.add(user)
         db.session.commit()
         session['id'] = user.id
@@ -138,6 +155,7 @@ def authorize():
         username = request.form.get('username')
         user = User.query.filter_by(username=username).first()
     if request.form['confirm']:
+        # print(request.form['confirm'], user)
         grant_user = user
     else:
         grant_user = None
@@ -165,3 +183,62 @@ def test():
 def api_me():
     user = current_token.user
     return jsonify(id=user.id, username=user.username, email=user.email)
+
+
+#
+# NEW ROUTES ADDED
+#
+
+
+@bp.route('/profile/', methods=['GET'])
+@require_oauth('profile_read')
+def profile_read(user):
+    """Return profile data in form of JSON."""
+    user = current_token.user
+    return jsonify(user.username,
+                   user.email,
+                   user.id,
+                   user.password,
+                   user.firstname,
+                   user.lastname,
+                   user.phone,
+                   user.verified)
+
+
+@bp.route('/members/read/', methods=['GET'])
+@require_oauth('asii_members_read')
+def members_read():
+    """Return just the data specific to an ASII member."""
+    user = current_token.user
+    return jsonify(({
+        'profilePhoto': user.asii_members_data['profilePhoto'],
+        'role': user.asii_members_data['role'],
+        'departament':  user.asii_members_data['departament']
+    }))
+
+
+@bp.route('/members/write/', methods=['PUT'])
+@require_oauth('asii_members_write')
+def members_write():
+    """Update ASII member's data into database."""
+    if request.is_json:
+        user = current_token.user
+        data = request.get_json()
+
+        updated_data = {
+            'profilePhoto': data.get('profilePhoto'),
+            'role': data.get('role'),
+            'departament': data.get('departament')
+        }
+
+        obj = User.query.filter_by(id=user.id).first()
+        obj.asii_members_data = updated_data
+        db.session.commit()
+
+        return jsonify(({
+            'profilePhoto': user.asii_members_data['profilePhoto'],
+            'role': user.asii_members_data['role'],
+            'departament': user.asii_members_data['departament']
+        }))
+    else:
+        return jsonify({"err": "No JSON content received."})

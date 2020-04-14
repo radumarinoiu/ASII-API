@@ -45,9 +45,9 @@ def register():
         firstname = request.form.get("firstname")
         lastname = request.form.get("lastname")
         phone = request.form.get("phone")
-        profile_photo = request.form.get("profilePhoto")
-        role = request.form.get("role")
-        departament = request.form.get("departament")
+        # profile_photo = request.form.get("profilePhoto")
+        # role = request.form.get("role")
+        # departament = request.form.get("departament")
 
         if len(password) < 8:
             return redirect("/")
@@ -62,11 +62,11 @@ def register():
             lastname=lastname,
             phone=phone,
             verified=False,  # By default    =>  you should validate the user!
-            asii_members_data={
-                "profilePhoto": profile_photo,
-                "role": role,
-                "departament": departament
-            }
+            # asii_members_data={
+            #     "profilePhoto": profile_photo,
+            #     "role": role,
+            #     "departament": departament
+            # }
         )
 
         db.session.add(user)
@@ -192,20 +192,24 @@ def api_me():
 
 @bp.route('/profile/', methods=['GET'])
 @require_oauth('profile_read')
-def profile_read(user):
+def profile_read():
     """Return profile data in form of JSON."""
     user = current_token.user
-    return jsonify(user.username,
-                   user.email,
-                   user.id,
-                   user.password,
-                   user.firstname,
-                   user.lastname,
-                   user.phone,
-                   user.verified)
+    return jsonify(
+        {
+            "username": user.username,
+            "email": user.email,
+            "id": user.id,
+            "password": user.password,
+            "firstname": user.firstname,
+            "lastname": user.lastname,
+            "phone": user.phone,
+            "verified": user.verified
+        }
+    )
 
 
-@bp.route('/members/read/', methods=['GET'])
+@bp.route('/members', methods=['GET'])
 @require_oauth('asii_members_read')
 def members_read():
     """Return just the data specific to an ASII member."""
@@ -217,7 +221,7 @@ def members_read():
     }))
 
 
-@bp.route('/members/write/', methods=['PUT'])
+@bp.route('/members', methods=['PUT'])
 @require_oauth('asii_members_write')
 def members_write():
     """Update ASII member's data into database."""

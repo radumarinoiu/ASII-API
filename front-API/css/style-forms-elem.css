@@ -1,0 +1,63 @@
+.grid-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 200px;
+}
+.left-side{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.right-side{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.down-side{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.logo-login{
+    width: 120px;
+}
+.logo-register{
+    width: 50px;
+}
+input[type=text], input[type=password]{
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.212);
+    padding-left: 20px;
+    height: 30px;
+}
+.icon-user{
+    background-image: url(../images/user.jpg);
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 15px 15px;
+}
+.icon-pass{
+    background-image: url(../images/lock.png);
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 15px 15px;
+}
+.icon-email{
+    background-image: url(../images/email.png);
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 15px 15px;
+}
+.flex-logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,0 +1,36 @@
+.switch-buttons{
+    display: flex;
+    flex-direction: row;
+    flex-basis: 35px;
+    margin-bottom: 20px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.102), 0 3px 5px 0 rgba(0, 0, 0, 0.137);
+    background-color: white;
+    color: black;
+}
+.switch-buttons > * {
+    flex-grow: 1;
+}
+.switch-button-login{
+    border: none;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 5px;
+}
+.switch-button-register{
+    border: none;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 5px;
+}
+.switch-button-red{
+    background-color: rgb(192, 17, 17);
+    color:white;
+}
+.submit-button{
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(192, 17, 17);
+    color: white;
+}

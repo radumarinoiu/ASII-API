@@ -209,7 +209,7 @@ def profile_read():
     )
 
 
-@bp.route('/members', methods=['GET'])
+@bp.route('/members/', methods=['GET'])
 @require_oauth('asii_members_read')
 def members_read():
     """Return just the data specific to an ASII member."""
@@ -221,7 +221,7 @@ def members_read():
     }))
 
 
-@bp.route('/members', methods=['PUT'])
+@bp.route('/members/', methods=['PUT'])
 @require_oauth('asii_members_write')
 def members_write():
     """Update ASII member's data into database."""
@@ -246,3 +246,49 @@ def members_write():
         }))
     else:
         return jsonify({"err": "No JSON content received."})
+
+
+@bp.route('/reset_password/', methods=['GET', 'POST'])
+def reset_request():
+    # If the user is logged in, send he/she to homepage
+    if current_user():
+        return redirect("/")
+
+    if request.method == 'POST':
+        email = request.form.get("email")
+        user = User.query.filter_by(email=email).first()
+
+        # If that email is not registered, send the user to the register page
+        if user is None:
+            return redirect("register")
+
+        return {
+            'token': user.get_reset_token()
+        }
+    return render_template('reset_request.html')
+
+
+@bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    # If the user is logged in, send he/she to homepage
+    if current_user():
+        return redirect("/")
+
+    # Check the token for authenticity
+    user = User.verify_reset_token(token)
+    if user is None:
+        return jsonify({'err': 'This is an invalid or expired token.'})
+
+    if request.method == 'POST':
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+
+        if password1 != password2:
+            return render_template('reset_password.html')
+        elif password1 is None:
+            return render_template('reset_password.html')
+
+        user.password = crypt(password1)     # update user's password into database
+        db.session.commit()
+        return redirect('/login')
+    return render_template('reset_password.html')

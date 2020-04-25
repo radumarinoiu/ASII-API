@@ -1,6 +1,7 @@
 import time
 from pbkdf2 import crypt
 from flask_sqlalchemy import SQLAlchemy
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from authlib.integrations.sqla_oauth2 import (
     OAuth2ClientMixin,
     OAuth2AuthorizationCodeMixin,
@@ -8,6 +9,7 @@ from authlib.integrations.sqla_oauth2 import (
 )
 
 db = SQLAlchemy()
+SECRET_KEY = '7f09e5d8de5529701af97c5b637b445b'
 
 
 class User(db.Model):
@@ -38,6 +40,19 @@ class User(db.Model):
     def check_password(self, password):
         print(self.password)
         return crypt(password, self.password) == self.password
+
+    def get_reset_token(self, expires=900):
+        s = Serializer(SECRET_KEY, expires)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(SECRET_KEY)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 
 class OAuth2Client(db.Model, OAuth2ClientMixin):

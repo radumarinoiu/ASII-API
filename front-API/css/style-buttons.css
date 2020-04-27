@@ -1,3 +1,4 @@
+@media screen and (min-width: 420px){
 .switch-buttons{
     display: flex;
     flex-direction: row;
@@ -33,4 +34,7 @@
     border-radius: 15px;
     background-color: rgb(192, 17, 17);
     color: white;
+    height: 25px;
+    width: 100px;
+}
 }

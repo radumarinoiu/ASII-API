@@ -1,3 +1,4 @@
+@media screen and (min-width: 420px){
 .grid-container{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -9,6 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .right-side{
     grid-column-start: 2;
@@ -16,6 +19,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .down-side{
     grid-column-start: 1;
@@ -26,7 +31,7 @@
     justify-content: space-around;
 }
 .logo-login{
-    width: 120px;
+    width: 130px;
 }
 .logo-register{
     width: 50px;
@@ -60,4 +65,5 @@ input[type=text], input[type=password]{
     display: flex;
     align-items: center;
     justify-content: center;
+}
 }

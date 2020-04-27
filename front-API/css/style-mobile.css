@@ -1,76 +1,13 @@
 @media screen and (max-width: 420px){
-    body{
-        padding: 0px;
-    }
-    .main-display{
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-    }
     .container{
-        display: flex;
-        flex-direction: column;
         width: 250px;
-        border: none;
-        border-radius: 30px;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-        /* font-family: "Comic Sans MS", cursive, sans-serif; */
-    }
-    .switch-buttons{
-        display: flex;
-        flex-direction: row;
-        flex-basis: 35px;
-        margin-bottom: 20px;
-        border-top-left-radius: 25px;
-        border-bottom-left-radius: 5px;
-        border-top-right-radius: 25px;
-        border-bottom-right-radius: 5px;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.102), 0 3px 5px 0 rgba(0, 0, 0, 0.137);
-        background-color: white;
-        color: black;
-    }
-    .switch-buttons > * {
-        flex-grow: 1;
-        background-color: white;
-        color: black;
-    }
-    .switch-button-login{
-        border: none;
-        border-top-left-radius: 25px;
-        border-bottom-left-radius: 5px;
-    }
-    .switch-button-register{
-        border: none;
-        border-top-right-radius: 25px;
-        border-bottom-right-radius: 5px;
-    }
-    .switch-button-red{
-        background-color: rgb(192, 17, 17);
-        color:white;
-    }
-    .submit-button{
-        border: none;
-        border-radius: 15px;
-        background-color: rgb(192, 17, 17);
-        color: white;
-        height: 25px;
-        width: 100px;
     }
     .grid-container{
         display: grid;
         grid-template-columns: 1fr;
-        height: 200px;
         height: 350px;
     }
     .left-side, .right-side, .down-side{
-        grid-column-start: 1;
-        grid-column-end: 2;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        justify-content: space-around;
-    }
-    .down-side{
         grid-column-start: 1;
         grid-column-end: 2;
         display: flex;
@@ -83,35 +20,5 @@
     }
     .logo-register{
         width: 30px;
-    }
-    input[type=text], input[type=password]{
-        border: none;
-        border-radius: 20px;
-        background-color: rgba(0, 0, 0, 0.212);
-        padding-left: 20px;
-        height: 30px;
-    }
-    .icon-user{
-        background-image: url(../images/user.jpg);
-        background-repeat: no-repeat;
-        background-position: left;
-        background-size: 15px 15px;
-    }
-    .icon-pass{
-        background-image: url(../images/lock.png);
-        background-repeat: no-repeat;
-        background-position: left;
-        background-size: 15px 15px;
-    }
-    .icon-email{
-        background-image: url(../images/email.png);
-        background-repeat: no-repeat;
-        background-position: left;
-        background-size: 15px 15px;
-    }
-    .flex-logo{
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 }

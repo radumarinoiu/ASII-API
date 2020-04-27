@@ -10,11 +10,11 @@
     .container{
         display: flex;
         flex-direction: column;
-        width: 600px;
+        width: 250px;
         border: none;
         border-radius: 30px;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-        font-family: "Comic Sans MS", cursive, sans-serif;
+        /* font-family: "Comic Sans MS", cursive, sans-serif; */
     }
     .switch-buttons{
         display: flex;
@@ -56,23 +56,30 @@
     }
     .grid-container{
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         height: 200px;
     }
     .left-side, .right-side, .down-side{
         grid-column-start: 1;
         grid-column-end: 2;
         display: flex;
+        align-items: center;
         flex-direction: column;
         justify-content: space-around;
-        margin-left: 20px;
-        margin-right: 20px;
+    }
+    .down-side{
+        grid-column-start: 1;
+        grid-column-end: 2;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
     }
     .logo-login{
-        width: 130px;
+        width: 80px;
     }
     .logo-register{
-        width: 50px;
+        width: 30px;
     }
     input[type=text], input[type=password]{
         border: none;

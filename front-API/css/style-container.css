@@ -15,6 +15,6 @@ body{
     border: none;
     border-radius: 30px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
-    font-family: "Comic Sans MS", cursive, sans-serif;
+    /* font-family: "Comic Sans MS", cursive, sans-serif; */
 }
 }

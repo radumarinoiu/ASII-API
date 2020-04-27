@@ -8,19 +8,21 @@
     grid-column-start: 1;
     grid-column-end: 2;
     display: flex;
+    align-items: center;
     flex-direction: column;
     justify-content: space-around;
-    margin-left: 20px;
-    margin-right: 20px;
+    /* margin-left: 20px;
+    margin-right: 20px; */
 }
 .right-side{
     grid-column-start: 2;
     grid-column-end: 3;
     display: flex;
+    align-items: center;
     flex-direction: column;
     justify-content: space-around;
-    margin-left: 20px;
-    margin-right: 20px;
+    /* margin-left: 20px;
+    margin-right: 20px; */
 }
 .down-side{
     grid-column-start: 1;
@@ -29,6 +31,8 @@
     align-items: center;
     flex-direction: column;
     justify-content: space-around;
+    /* margin-left: 20px;
+    margin-right: 20px; */
 }
 .logo-login{
     width: 130px;

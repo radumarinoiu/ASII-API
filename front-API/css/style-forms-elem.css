@@ -8,21 +8,19 @@
     grid-column-start: 1;
     grid-column-end: 2;
     display: flex;
-    align-items: center;
     flex-direction: column;
     justify-content: space-around;
-    /* margin-left: 20px;
-    margin-right: 20px; */
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .right-side{
     grid-column-start: 2;
     grid-column-end: 3;
     display: flex;
-    align-items: center;
     flex-direction: column;
     justify-content: space-around;
-    /* margin-left: 20px;
-    margin-right: 20px; */
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .down-side{
     grid-column-start: 1;
@@ -31,11 +29,9 @@
     align-items: center;
     flex-direction: column;
     justify-content: space-around;
-    /* margin-left: 20px;
-    margin-right: 20px; */
 }
 .logo-login{
-    width: 130px;
+    width: 160px;
 }
 .logo-register{
     width: 50px;
@@ -44,25 +40,25 @@ input[type=text], input[type=password]{
     border: none;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.212);
-    padding-left: 20px;
+    padding-left: 30px;
     height: 30px;
 }
 .icon-user{
-    background-image: url(../images/user.jpg);
+    background-image: url(../images/user.png);
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: left 5px top 49%;
     background-size: 15px 15px;
 }
 .icon-pass{
     background-image: url(../images/lock.png);
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: left 5px top 49%;
     background-size: 15px 15px;
 }
 .icon-email{
     background-image: url(../images/email.png);
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: left 5px top 49%;
     background-size: 15px 15px;
 }
 .flex-logo{

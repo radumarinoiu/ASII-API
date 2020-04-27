@@ -17,9 +17,9 @@
         <div class="container">
 
             <div class="switch-buttons">
-                <button type="button" id="button-login" class="switch-button-login" onclick="openForm(this)">Log
-                    In</button>
-                <button type="button" id="button-register" class="switch-button-register switch-button-red"
+                <button type="button" id="button-login" class="switch-button-login" 
+                    onclick="openForm(this)">Log In</button>
+                <button type="button" id="button-register" class="switch-button-red switch-button-register"
                     onclick="openForm(this)">Register</button>
             </div>
 
@@ -61,7 +61,9 @@
                         class="icon-email" required>
                     <input type="password" id="pass1" name="password" placeholder="Password"
                         pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
-                        title="Must contain at least one number, at least one special character and at least 8  characters"
+                        title="
+                        Must contain at least one number, at least
+one special character and at least 8  characters"
                         oninput="validateRegexPass()" oninput="matchingPass()" class="icon-pass" required>
                     <input type="password" id="pass2" name="password" placeholder="Validate Password" class="icon-pass"
                         oninput="matchingPass()" required>

@@ -2,7 +2,7 @@ import json
 import time
 import traceback
 
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, url_for
 from flask import render_template, redirect, jsonify
 from werkzeug.security import gen_salt
 from authlib.integrations.flask_oauth2 import current_token
@@ -10,6 +10,7 @@ from authlib.oauth2 import OAuth2Error
 from pbkdf2 import crypt
 from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
+from .mailer import mail, Message
 
 bp = Blueprint(__name__, 'home')
 
@@ -248,9 +249,28 @@ def members_write():
         return jsonify({"err": "No JSON content received."})
 
 
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request', sender='no-reply@asii.ro',  # Modify the sender field with your email
+                  recipients=[user.email])
+
+    # If the recipient doesn't support html-rendered email, this will be sent
+    msg.body = """Hello, {}!
+To reset your password, visit the following link:
+{}
+
+If you did not intend to receive this email, you can safely ignore it.
+(c) ASII 2020""".format(user.firstname, url_for('website.routes.reset_token', token=token, _external=True))
+
+    # Sent if the sender supports html-rendered email
+    msg.html = render_template('email.html', token=url_for('website.routes.reset_token', token=token, _external=True),
+                               username=user.firstname)
+    mail.send(msg)
+    
+
 @bp.route('/reset_password/', methods=['GET', 'POST'])
 def reset_request():
-    # If the user is logged in, send he/she to homepage
+    # If the user is logged in, send him/her to homepage
     if current_user():
         return redirect("/")
 
@@ -262,9 +282,8 @@ def reset_request():
         if user is None:
             return redirect("register")
 
-        return {
-            'token': user.get_reset_token()
-        }
+        send_reset_email(user)
+        return redirect('/login')
     return render_template('reset_request.html')
 
 

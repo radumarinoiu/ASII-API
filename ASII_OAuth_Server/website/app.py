@@ -1,8 +1,9 @@
-import os
+from os import environ
 from flask import Flask
 from .models import db
 from .oauth2 import config_oauth
 from .routes import bp
+from .mailer import mail
 
 
 def create_app(config=None):
@@ -12,7 +13,7 @@ def create_app(config=None):
     app.config.from_object('website.settings')
 
     # load environment configuration
-    if 'WEBSITE_CONF' in os.environ:
+    if 'WEBSITE_CONF' in environ:
         app.config.from_envvar('WEBSITE_CONF')
 
     # load app specified configuration

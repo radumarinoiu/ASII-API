@@ -1,8 +1,5 @@
-@media screen and (min-width: 420px){
+@media screen and (min-width: 421px){
     /* laptop */
-    .container{
-        width: 250px;
-    }
     .grid-container{
         display: grid;
         grid-template-columns: 1fr 1fr;

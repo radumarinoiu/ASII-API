@@ -3,25 +3,25 @@ input[type=text], input[type=password]{
     border: none;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.212);
-    padding-left: 30px;
+    padding-left: 35px;
     height: 30px;
 }
 .icon-user{
     background-image: url(../images/user.png);
     background-repeat: no-repeat;
-    background-position: left 5px top 49%;
+    background-position: left 12px top 49%;
     background-size: 15px 15px;
 }
 .icon-pass{
     background-image: url(../images/lock.png);
     background-repeat: no-repeat;
-    background-position: left 5px top 49%;
+    background-position: left 12px top 49%;
     background-size: 15px 15px;
 }
 .icon-email{
     background-image: url(../images/email.png);
     background-repeat: no-repeat;
-    background-position: left 5px top 49%;
+    background-position: left 12px top 49%;
     background-size: 15px 15px;
 }
 .flex-logo{

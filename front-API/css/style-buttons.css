@@ -3,6 +3,7 @@
     flex-direction: row;
     flex-basis: 35px;
     margin-bottom: 20px;
+    border: none;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 5px;
     border-top-right-radius: 25px;
@@ -20,25 +21,37 @@
     border: none;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 5px;
+    cursor: pointer;
 }
 .switch-button-register{
     border: none;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 5px;
+    cursor: pointer;
 }
 .switch-button-red{
-    background-color: rgb(192, 17, 17);
+    background-color: rgb(206, 17, 17);
     color:white;
+}
+.switch-button-red:hover{
+    background-color: brown;
 }
 .switch-button-white{
     background-color: white;
     color:black;
 }
+.switch-button-login:focus, .switch-button-register:focus{
+    outline: none;
+}
 .submit-button{
     border: none;
     border-radius: 15px;
-    background-color: rgb(192, 17, 17);
+    background-color: rgb(206, 17, 17);
     color: white;
     height: 30px;
     width: 100px;
+    cursor: pointer;
+}
+.submit-button:hover{
+    background-color: brown;
 }

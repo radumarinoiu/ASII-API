@@ -1,3 +1,3 @@
 FROM nginx
 
-COPY . /usr/share/nginx/html/
+COPY ASII_OAuth_Frontend/ /usr/share/nginx/html/

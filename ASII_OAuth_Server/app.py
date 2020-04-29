@@ -5,7 +5,7 @@ if __name__ == '__main__':
         'SECRET_KEY': '7f09e5d8de5529701af97c5b637b445b',
         'OAUTH2_REFRESH_TOKEN_GENERATOR': True,
         'SQLALCHEMY_TRACK_MODIFICATIONS': True,
-        'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.sqlite',
+        'SQLALCHEMY_DATABASE_URI': 'sqlite:////db/db.sqlite',
     })
     # Email configurations
     app.config['MAIL_SERVER'] = 'smtp.googlemail.com'

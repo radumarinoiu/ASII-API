@@ -1,0 +1,22 @@
+body{
+    padding: 0px;
+}
+.main-display{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    min-width: 260px;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+.grid-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 200px;
+}

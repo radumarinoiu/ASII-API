@@ -1,0 +1,22 @@
+@media screen and (max-width: 550px){
+    /* phone */
+    .container{
+        width: 250px;
+    }
+    .grid-container{
+        display: grid;
+        grid-template-columns: 1fr;
+        height: 350px;
+    }
+    .left-side, .right-side, .down-side{
+        grid-column-start: 1;
+        grid-column-end: 2;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .logo-login, .logo-register{
+        width: 80px;
+    }
+}

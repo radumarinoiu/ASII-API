@@ -16,10 +16,7 @@
         flex-direction: column;
         justify-content: space-around;
     }
-    .logo-login{
+    .logo-login, .logo-register{
         width: 80px;
-    }
-    .logo-register{
-        width: 30px;
     }
 }

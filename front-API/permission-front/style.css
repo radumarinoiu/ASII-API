@@ -1,0 +1,66 @@
+body{
+    padding: 0px;
+}
+.main-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 400px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.19);
+}
+.header{
+    
+}
+.informations{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 30px;
+}
+.informations > *{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+pre{
+    color: rgb(7, 149, 231);
+    display: inline;
+}
+img{
+    width: 40px;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+p, pre{
+    font-family: Arial, Helvetica, sans-serif;
+    display: inline;
+}
+.submit-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.cancel{
+    border: none;
+    background-color: white;
+    color: red;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+.allow{
+    border:none;
+    border-radius: 5px;
+    background-color: red;
+    color:white;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+.cancel:focus, .allow:focus{
+    outline: none;
+}

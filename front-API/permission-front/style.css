@@ -12,22 +12,18 @@ body{
     justify-content: space-around;
     width: 400px;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.19);
-}
-.header{
-    
+
 }
 .informations{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    height: 450px;
     padding: 30px;
 }
-.informations > *{
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
+
 pre{
     color: rgb(7, 149, 231);
     display: inline;
@@ -37,9 +33,10 @@ img{
     vertical-align: middle;
     padding-left: 10px;
 }
-p, pre{
-    font-family: Arial, Helvetica, sans-serif;
+p{
     display: inline;
+    font-family: 'Roboto', sans-serif;
+    font-weight:normal;
 }
 .submit-buttons{
     display: flex;
@@ -55,7 +52,7 @@ p, pre{
 }
 .allow{
     border:none;
-    border-radius: 5px;
+    border-radius: 15px;
     background-color: red;
     color:white;
     padding: 10px 25px;
@@ -63,4 +60,22 @@ p, pre{
 }
 .cancel:focus, .allow:focus{
     outline: none;
+}
+.text-grey{
+    color: rgb(87, 87, 87);
+    font-size: 13px;
+}
+.text-red{
+    color: rgb(243, 10, 10);
+}
+.small{
+    font-size:13px;
+}
+.big{
+    font-size: 23px;
+}
+.title{
+    padding-left: 30px;
+    padding-right:30px;
+    text-align: center;
 }

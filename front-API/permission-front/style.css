@@ -10,11 +10,11 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 400px;
+    width: 450px;
     border: none;
     border-radius: 15px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.19);
-
+    padding: 5px;
 }
 .informations{
     display: flex;
@@ -78,4 +78,19 @@ p{
     padding-left: 30px;
     padding-right:30px;
     text-align: center;
+}
+.image-user{
+    width: 20px;
+}
+.allow-block{
+    display: flex;
+    flex-direction: row;
+    padding-right: 30px;
+}
+.image-allow{
+    width: 60px;
+    height: 40px;
+}
+.antet{
+    padding-top:10px;
 }

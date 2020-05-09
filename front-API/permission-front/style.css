@@ -14,7 +14,6 @@ body{
     border: none;
     border-radius: 15px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.19);
-    padding: 5px;
 }
 .informations{
     display: flex;
@@ -29,8 +28,10 @@ pre{
     display: inline;
 }
 img{
-    width: 40px;
     vertical-align: middle;
+}
+.logo-header{
+    width: 40px;
     padding-left: 10px;
 }
 p{
@@ -72,7 +73,7 @@ p{
     font-size:13px;
 }
 .big{
-    font-size: 23px;
+    font-size: 24px;
 }
 .title{
     padding-left: 30px;
@@ -83,14 +84,10 @@ p{
     width: 20px;
 }
 .allow-block{
-    display: flex;
-    flex-direction: row;
+    display: inline;
     padding-right: 30px;
 }
 .image-allow{
-    width: 60px;
-    height: 40px;
-}
-.antet{
-    padding-top:10px;
+    width: 25px;
+    height: 25px;
 }

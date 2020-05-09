@@ -2,4 +2,31 @@
     .container{
         width: 90%;
     }
+    .informations{
+        height: 400px;
+        padding: 20px;
+    }
+    .title{
+        padding-left:10px;
+        padding-right:10px;
+    }
+    .text-grey{
+        font-size: 10px;
+    }
+    .small{
+        font-size:10px;
+    }
+    .big{
+        font-size:18px;
+    }
+    .medium{
+        font-size:13px;
+    }
+    .allow-block{
+        padding-right: 15px;
+    }
+    .image-allow{
+        width: 18px;
+        height: 18px;
+    }
 }

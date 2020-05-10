@@ -1,6 +1,7 @@
 import time
 from pbkdf2 import crypt
 from flask_sqlalchemy import SQLAlchemy
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from authlib.integrations.sqla_oauth2 import (
     OAuth2ClientMixin,
     OAuth2AuthorizationCodeMixin,
@@ -8,6 +9,7 @@ from authlib.integrations.sqla_oauth2 import (
 )
 
 db = SQLAlchemy()
+SECRET_KEY = '7f09e5d8de5529701af97c5b637b445b'
 
 
 class User(db.Model):
@@ -15,6 +17,19 @@ class User(db.Model):
     username = db.Column(db.String(40), unique=True)
     email = db.Column(db.String(40))
     password = db.Column(db.String())
+    firstname = db.Column(db.String(40))
+    lastname = db.Column(db.String(40))
+    phone = db.Column(db.String(10))
+    verified = db.Column(db.Boolean())
+
+    # Do what you want with this
+    asii_members_data = db.Column(db.JSON(
+        {
+            "profilePhoto": db.String(),
+            "role": db.String(),
+            "departament": db.String()
+        }
+    ))
 
     def __str__(self):
         return self.username
@@ -25,6 +40,19 @@ class User(db.Model):
     def check_password(self, password):
         print(self.password)
         return crypt(password, self.password) == self.password
+
+    def get_reset_token(self, expires=900):
+        s = Serializer(SECRET_KEY, expires)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(SECRET_KEY)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 
 class OAuth2Client(db.Model, OAuth2ClientMixin):

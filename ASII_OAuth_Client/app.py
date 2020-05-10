@@ -13,7 +13,7 @@ if __name__ == '__main__':
     oauth_bp = oauth_routes.setup_blueprint(
         client_id="E6pp6lW6u2Xd7V8P10pLceEU",
         client_secret="qJMis0FqnFW3hzdnDix1XBPxjUqrgWDwMYt1lQaJ91N0ET9K",
-        scopes=["profile"],
+        scopes=["profile_read", "asii_member_read", "asii_members_write"],
         authorization_uri="http://localhost:5000/oauth/authorize",
         access_token_uri="http://localhost:5000/oauth/token"
     )

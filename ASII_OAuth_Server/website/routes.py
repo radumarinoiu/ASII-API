@@ -1,6 +1,7 @@
 import json
 import time
 import traceback
+from httpstatus import HTTPStatus
 
 from flask import Blueprint, request, session, url_for
 from flask import render_template, redirect, jsonify
@@ -36,62 +37,55 @@ def home():
         return redirect("login")
 
 
-@bp.route("/register", methods=["GET", "POST"])
+@bp.route("/register", methods=["POST"])
 def register():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        password2 = request.form.get("password2")
-        email = request.form.get("email")
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        phone = request.form.get("phone")
-        # profile_photo = request.form.get("profilePhoto")
-        # role = request.form.get("role")
-        # departament = request.form.get("departament")
+    password = request.form.get("password")
+    password2 = request.form.get("password2")
+    email = request.form.get("email")
+    firstname = request.form.get("firstname")
+    lastname = request.form.get("lastname")
+    # phone = request.form.get("phone")
+    # profile_photo = request.form.get("profilePhoto")
+    # role = request.form.get("role")
+    # departament = request.form.get("departament")
 
-        if len(password) < 8:
-            return redirect("/")
-        if password != password2:
-            return redirect("/")
+    if len(password) < 8:
+        return redirect("/")
+    if password != password2:
+        return redirect("/")
 
-        user = User(
-            username=username,
-            password=crypt(password),
-            email=email,
-            firstname=firstname,
-            lastname=lastname,
-            phone=phone,
-            verified=False,  # By default    =>  you should validate the user!
-            # asii_members_data={
-            #     "profilePhoto": profile_photo,
-            #     "role": role,
-            #     "departament": departament
-            # }
-        )
+    user = User(
+        password=crypt(password),
+        email=email,
+        firstname=firstname,
+        lastname=lastname,
+        verified=False,  # By default    =>  you should validate the user!
+        # asii_members_data={
+        #     "profilePhoto": profile_photo,
+        #     "role": role,
+        #     "departament": departament
+        # }
+    )
 
-        db.session.add(user)
-        db.session.commit()
-        session['id'] = user.id
-        return redirect('/')
-    return render_template('register.html')
+    db.session.add(user)
+    db.session.commit()
+    session['id'] = user.id
+    return redirect('/')
 
 
-@bp.route("/login", methods=["GET", "POST"])
+@bp.route("/login", methods=["POST"])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        user = User.query.filter_by(username=username).first()
-        if user:
-            if user.check_password(password):
-                session['id'] = user.id
-                return redirect('/')
-            else:
-                print("Wrong password")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    user = User.query.filter_by(email=email).first()
+    if user:
+        if user.check_password(password):
+            session['id'] = user.id
+            return redirect('/')
         else:
-            print("Wrong username")
-    return render_template('login.html')
+            print("Wrong password")
+    else:
+        print("Wrong email")
 
 
 @bp.route('/logout')
@@ -152,9 +146,9 @@ def authorize():
             print(traceback.format_exc())
             return error.error
         return render_template('authorize.html', user=user, grant=grant)
-    if not user and 'username' in request.form:
-        username = request.form.get('username')
-        user = User.query.filter_by(username=username).first()
+    if not user and 'email' in request.form:
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
     if request.form['confirm']:
         # print(request.form['confirm'], user)
         grant_user = user
@@ -176,14 +170,14 @@ def revoke_token():
 @bp.route('/test', methods=['POST'])
 def test():
     print("Test:", json.dumps(request.json()))
-    return jsonify({})
+    return jsonify({"test": "test"}), HTTPStatus.OK
 
 
 @bp.route('/api/me')
 @require_oauth('profile')
 def api_me():
     user = current_token.user
-    return jsonify(id=user.id, username=user.username, email=user.email)
+    return jsonify(id=user.id, email=user.email), HTTPStatus.OK
 
 
 #
@@ -198,16 +192,14 @@ def profile_read():
     user = current_token.user
     return jsonify(
         {
-            "username": user.username,
             "email": user.email,
             "id": user.id,
             "password": user.password,
             "firstname": user.firstname,
             "lastname": user.lastname,
-            "phone": user.phone,
             "verified": user.verified
         }
-    )
+    ), HTTPStatus.OK
 
 
 @bp.route('/members/', methods=['GET'])
@@ -219,7 +211,7 @@ def members_read():
         'profilePhoto': user.asii_members_data['profilePhoto'],
         'role': user.asii_members_data['role'],
         'departament':  user.asii_members_data['departament']
-    }))
+    })), HTTPStatus.OK
 
 
 @bp.route('/members/', methods=['PUT'])
@@ -244,18 +236,20 @@ def members_write():
             'profilePhoto': user.asii_members_data['profilePhoto'],
             'role': user.asii_members_data['role'],
             'departament': user.asii_members_data['departament']
-        }))
+        })), HTTPStatus.OK
     else:
-        return jsonify({"err": "No JSON content received."})
+        return jsonify({"err": "No JSON content received."}), HTTPStatus.BAD_REQUEST
 
 
 def send_reset_email(user):
+    """Send an email containing a link to reset the password of the user."""
     token = user.get_reset_token()
     msg = Message('Password Reset Request', sender='no-reply@asii.ro',  # Modify the sender field with your email
                   recipients=[user.email])
 
     # If the recipient doesn't support html-rendered email, this will be sent
-    msg.body = """Hello, {}!
+    msg.body = """\
+Hello, {}!
 To reset your password, visit the following link:
 {}
 
@@ -268,46 +262,46 @@ If you did not intend to receive this email, you can safely ignore it.
     mail.send(msg)
     
 
-@bp.route('/reset_password/', methods=['GET', 'POST'])
+@bp.route('/reset_password/', methods=['POST'])
 def reset_request():
-    # If the user is logged in, send him/her to homepage
+    """Handle the password-reset process. Call send_reset_email() if all good."""
+    # If the user is logged in, send them to homepage
     if current_user():
         return redirect("/")
 
-    if request.method == 'POST':
-        email = request.form.get("email")
-        user = User.query.filter_by(email=email).first()
+    email = request.form.get("email")
+    user = User.query.filter_by(email=email).first()
 
-        # If that email is not registered, send the user to the register page
-        if user is None:
-            return redirect("register")
+    # If that email is not registered, send the user to the register page
+    # Ii spui sa astepte pana maine -- 201, 404
+    if user is None:
+        return jsonify({"err": "No user is registered with that email address."}), HTTPStatus.BAD_REQUEST
 
-        send_reset_email(user)
-        return redirect('/login')
-    return render_template('reset_request.html')
+    send_reset_email(user)
+    return redirect('/login')
 
 
-@bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+@bp.route('/reset_password/<token>', methods=['POST'])
 def reset_token(token):
-    # If the user is logged in, send he/she to homepage
+    """Reset the password using the token from the link received in the password-reset email."""
+    # If the user is logged in, send them to homepage
     if current_user():
         return redirect("/")
 
     # Check the token for authenticity
     user = User.verify_reset_token(token)
     if user is None:
-        return jsonify({'err': 'This is an invalid or expired token.'})
+        return jsonify({'err': 'This is an invalid or expired token.'}), HTTPStatus.BAD_REQUEST
 
-    if request.method == 'POST':
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
 
-        if password1 != password2:
-            return render_template('reset_password.html')
-        elif password1 is None:
-            return render_template('reset_password.html')
+    if password1 != password2:
+        return render_template('reset_password.html')
+    elif password1 is None:
+        return render_template('reset_password.html')
 
-        user.password = crypt(password1)     # update user's password into database
-        db.session.commit()
-        return redirect('/login')
-    return render_template('reset_password.html')
+    user.password = crypt(password1)     # update user's password into database
+    db.session.commit()
+    return redirect('/login')
+    # return render_template('reset_password.html')

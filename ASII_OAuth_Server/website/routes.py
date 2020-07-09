@@ -72,8 +72,10 @@ def register():
     return redirect('/')
 
 
-@bp.route("/login", methods=["POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "GET":
+        return render_template("login.html")
     email = request.form.get("email")
     password = request.form.get("password")
     user = User.query.filter_by(email=email).first()
@@ -154,6 +156,9 @@ def authorize():
     return authorization.create_authorization_response(grant_user=grant_user)
 
 
+# https://auth.asii.ro/oauth/token
+# Use Basic Auth (user=client_id, password=client_secret)
+# x-www-form-urlencoded: grant_type=authorization_code code=[code from authorize]
 @bp.route('/oauth/token', methods=['POST'])
 def issue_token():
     return authorization.create_token_response()
@@ -164,10 +169,10 @@ def revoke_token():
     return authorization.create_endpoint_response('revocation')
 
 
-@bp.route('/test', methods=['POST'])
+@bp.route('/test', methods=["GET", 'POST'])
 def test():
-    print("Test:", json.dumps(request.json()))
-    return jsonify({"test": "test"}), HTTPStatus.OK
+    print("Test:", json.dumps(request.form))
+    return jsonify(request.form), HTTPStatus.OK
 
 
 @bp.route('/api/me')
@@ -275,7 +280,7 @@ def reset_request():
         return jsonify({"err": "No user is registered with that email address."}), HTTPStatus.BAD_REQUEST
 
     send_reset_email(user)
-    return redirect('/login')
+    return "Reset password email sent!", HTTPStatus.CREATED
 
 
 @bp.route('/reset_password/<token>', methods=['POST'])

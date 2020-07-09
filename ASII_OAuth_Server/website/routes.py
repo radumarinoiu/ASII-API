@@ -1,7 +1,7 @@
 import json
 import time
 import traceback
-from httpstatus import HTTPStatus
+from http import HTTPStatus
 
 from flask import Blueprint, request, session, url_for
 from flask import render_template, redirect, jsonify

@@ -12,10 +12,8 @@ if __name__ == '__main__':
     app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
-    # app.config['MAIL_USERNAME'] = environ.get('EMAIL_USER')
-    # app.config['MAIL_PASSWORD'] = environ.get('EMAIL_USER')
-    app.config['MAIL_USERNAME'] = "reloaded.ionut@gmail.com"
-    app.config['MAIL_PASSWORD'] = "fyZcRSrhDuTVyFB9UeabT2QiKCRC7F"
+    app.config['MAIL_USERNAME'] = environ.get('EMAIL_USER')
+    app.config['MAIL_PASSWORD'] = environ.get('EMAIL_USER')
     mail.init_app(app)
 
     app.run("0.0.0.0", 5000)

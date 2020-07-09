@@ -44,7 +44,6 @@ def register():
     email = request.form.get("email")
     firstname = request.form.get("firstname")
     lastname = request.form.get("lastname")
-    # phone = request.form.get("phone")
     # profile_photo = request.form.get("profilePhoto")
     # role = request.form.get("role")
     # departament = request.form.get("departament")
@@ -83,9 +82,9 @@ def login():
             session['id'] = user.id
             return redirect('/')
         else:
-            print("Wrong password")
+            return jsonify({"err": "Wrong password"}), HTTPStatus.UNAUTHORIZED
     else:
-        print("Wrong email")
+        return jsonify({"err": "Wrong email"}), HTTPStatus.UNAUTHORIZED
 
 
 @bp.route('/logout')
@@ -95,13 +94,11 @@ def logout():
 
 
 # THIS IS A CLIENT (SERVICE) NOT A USER
-@bp.route('/create_client', methods=['GET', 'POST'])
+@bp.route('/create_client', methods=['POST'])
 def create_client():
     user = current_user()
     if not user:
         return redirect('/')
-    if request.method == 'GET':
-        return render_template('create_client.html')
 
     client_id = gen_salt(24)
     client_id_issued_at = int(time.time())
@@ -258,7 +255,7 @@ If you did not intend to receive this email, you can safely ignore it.
 
     # Sent if the sender supports html-rendered email
     msg.html = render_template('email.html', token=url_for('website.routes.reset_token', token=token, _external=True),
-                               username=user.firstname)
+                               firstname=user.firstname)
     mail.send(msg)
     
 
@@ -297,11 +294,10 @@ def reset_token(token):
     password2 = request.form.get('password2')
 
     if password1 != password2:
-        return render_template('reset_password.html')
+        return jsonify({'err': 'The passwords don\'t match'}), HTTPStatus.NOT_ACCEPTABLE
     elif password1 is None:
-        return render_template('reset_password.html')
+        return jsonify({'err': 'The passwords cannot be empty.'}), HTTPStatus.NOT_ACCEPTABLE
 
     user.password = crypt(password1)     # update user's password into database
     db.session.commit()
     return redirect('/login')
-    # return render_template('reset_password.html')

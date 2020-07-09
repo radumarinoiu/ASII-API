@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 Flask-Mail
 Authlib
 pbkdf2
+httpstatus35

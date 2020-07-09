@@ -1,0 +1,16 @@
+/login - x-www-form-urlencoded (POST) - session cookie
+	username
+	password
+
+/register - x-www-form-urlencoded (POST) - session cookie
+    password
+    password2
+    email
+    firstname
+    lastname
+
+
+# TODO
+-	Scoate toate GET-urile care dau render_template()
+-	in loc de user, email la register
+-	scos render_template() daca e la un GET

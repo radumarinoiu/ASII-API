@@ -1,5 +1,6 @@
 Flask
 Flask-SQLAlchemy
 Flask-Mail
+Flask-cors
 Authlib
 pbkdf2

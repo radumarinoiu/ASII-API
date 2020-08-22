@@ -27,7 +27,7 @@ class User(db.Model):
             "role": db.String(),
             "departament": db.String()
         }
-    ))
+    ), default={})
 
     def __str__(self):
         return self.email
@@ -36,7 +36,6 @@ class User(db.Model):
         return self.id
 
     def check_password(self, password):
-        print(self.password)
         return crypt(password, self.password) == self.password
 
     def get_reset_token(self, expires=900):

@@ -1,5 +1,130 @@
-<form action="" method="post">
-    <input type="text" name="email" placeholder="Email">
-    <input type="password" name="password" placeholder="Password" minlength="8" required>
-    <button type="submit">Login</button>
-</form>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Oauth front
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-container.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-forms-items.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style-mobile.css') }}">
+</head>
+
+<body>
+<div class="main-display">
+    <div class="container">
+
+        <div class="switch-buttons">
+            <button type="button" id="button-login" class="switch-button-login"
+                    onclick="openForm(this)">Log In</button>
+            <button type="button" id="button-register" class="switch-button-red switch-button-register"
+                    onclick="openForm(this)">Register</button>
+        </div>
+
+        <!-- login -->
+        <form id="login" class="grid-container"
+              method="POST" action="/login?{{ params }}">
+            <div class="left-side">
+                <!-- left side -->
+                <div class="flex-logo">
+                    <img src="{{ url_for('static', filename='images/asii_logo.png') }}" alt="ASII LOGO" class="logo-login">
+                </div>
+            </div>
+            <div class="right-side">
+                <!-- right side -->
+                <input type="email" id="email" name="email" placeholder="Email adress" class="icon-email" required>
+                <input type="password" id="pass" name="password" placeholder="Password" class="icon-pass" required>
+            </div>
+            <div class="down-side">
+                <!-- down side -->
+                <button type="submit" class="submit-button">Submit</button>
+                <div>
+                    <a href="">Forgot password?</a>
+                </div>
+            </div>
+        </form>
+
+        <!-- register -->
+        <form id="register" class="grid-container" style="display:none;"
+              method="POST" action="/register?{{ params }}">
+            <div class="left-side">
+                <!-- left side -->
+                <div class="flex-logo">
+                    <img src="{{ url_for('static', filename='images/asii_logo.png') }}" alt="ASII LOGO" class="logo-register">
+                </div>
+                <input type="text" id="fname" name="firstname" placeholder="First Name" class="icon-user" required>
+                <input type="text" id="lname" name="lastname" placeholder="Last Name" class="icon-user" required>
+            </div>
+            <div class="right-side">
+                <!-- right side -->
+                <input type="email" id="email" name="email" placeholder="Email adress"
+                       class="icon-email" required>
+                <input type="password" id="pass1" name="password" placeholder="Password"
+                       pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-,\.]).{8,}$"
+                       title="
+                        Must contain at least one number, at least
+one special character and at least 8  characters"
+                       oninput="matchingPass()" class="icon-pass" required>
+                <input type="password" id="pass2" name="password2" placeholder="Validate Password" class="icon-pass"
+                       oninput="matchingPass()" required>
+                <span class="popup" id="matchingPass"></span>
+            </div>
+            <div class="down-side">
+                <!-- down side -->
+                <button type="submit" class="submit-button">Submit</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script>
+    //function which make switch between login form and register form
+    let currentPage = 'login';
+    function openForm(elem) {
+        if (elem.id === 'button-register' && currentPage === 'login') {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('register').removeAttribute('style');
+            document.getElementById('button-login').classList.toggle('switch-button-red');
+            document.getElementById('button-register').classList.toggle('switch-button-red');
+            currentPage = 'register';
+        }
+        else if (elem.id === 'button-login' && currentPage === 'register') {
+            document.getElementById('register').style.display = 'none';
+            document.getElementById('login').removeAttribute('style');
+            document.getElementById('button-login').classList.toggle('switch-button-red');
+            document.getElementById('button-register').classList.toggle('switch-button-red');
+            currentPage = 'login';
+        }
+    }
+    // //function to validate email
+    // function validateRegexEmail() {
+    //     var myInput = document.getElementById("email");
+    //     if (!myInput.value.match(/[.+@.+\..+]/g))
+    //         document.getElementById("regexEmail").innerHTML = 'Email is not valid.<br>';
+    // }
+    // function which confirm that the both password are the same in register
+    function matchingPass() {
+        if (document.getElementById("pass1").value != document.getElementById("pass2").value) {
+            txt = "Passwords don't match!";
+            document.getElementById("matchingPass").innerText = txt;
+        }
+        else document.getElementById("matchingPass").innerText = '';
+    }
+    // //function to verifing regex password
+    // function validateRegexPass() {
+    //     var myInput = document.getElementById("pass1");
+    //     txt = '';
+    //     if (!myInput.value.match(/[0-9]/g))
+    //         txt += 'Password must contain a number.<br>';
+    //     if (!myInput.value.match(/[#?!@$%^_&*-]/g))
+    //         txt += 'Password must contain a symbol.<br>';
+    //     if (myInput.value.length < 8)
+    //         txt += 'Password must have 8 characters.';
+    //     document.getElementById("regexPass").innerHTML = txt;
+    // }
+</script>
+</body>
+
+</html>

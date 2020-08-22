@@ -1,0 +1,93 @@
+body{
+    padding: 0px;
+}
+.main-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 450px;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 5px 0 rgba(0, 0, 0, 0.19);
+}
+.informations{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 450px;
+    padding: 30px;
+}
+
+pre{
+    color: rgb(7, 149, 231);
+    display: inline;
+}
+img{
+    vertical-align: middle;
+}
+.logo-header{
+    width: 40px;
+    padding-left: 10px;
+}
+p{
+    display: inline;
+    font-family: 'Roboto', sans-serif;
+    font-weight:normal;
+}
+.submit-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.cancel{
+    border: none;
+    background-color: white;
+    color: red;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+.allow{
+    border:none;
+    border-radius: 15px;
+    background-color: red;
+    color:white;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+.cancel:focus, .allow:focus{
+    outline: none;
+}
+.text-grey{
+    color: rgb(87, 87, 87);
+    font-size: 13px;
+}
+.text-red{
+    color: rgb(243, 10, 10);
+}
+.small{
+    font-size:13px;
+}
+.big{
+    font-size: 24px;
+}
+.title{
+    padding-left: 30px;
+    padding-right:30px;
+    text-align: center;
+}
+.image-user{
+    width: 20px;
+}
+.allow-block{
+    display: inline;
+    padding-right: 30px;
+}
+.image-allow{
+    width: 25px;
+    height: 25px;
+}

@@ -1,19 +1,59 @@
-<p>{{grant.client.client_name}} is requesting:
-<strong>{{ grant.request.scope }}</strong>
-</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/mobileMode.css')}}">
+</head>
 
-<form action="" method="post">
-  <label>
-    <input type="checkbox" name="confirm">
-    <span>Consent?</span>
-  </label>
-  {% if not user %}
-  <p>You haven't logged in. Log in with:</p>
-  <div>
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password" minlength="8" required>
-  </div>
-  {% endif %}
-  <br>
-  <button>Submit</button>
-</form>
+<body>
+<div class="main-container">
+    <div class="container">
+        <div class="antet">
+            <img src="{{url_for('static', filename='images/asii_logo.png')}}" class="logo-header"><p class="text-grey">Sing in with ASII</p>
+            <hr>
+        </div>
+        <div class="informations">
+            <div class="title">
+                <div>
+                    <p class="text-red big">{{grant.client.client_name}} </p> <p class="big">wants to access your ASII Account</p></div>
+                <img src="{{url_for('static', filename='images/user-account.png')}}" class="image-user"><p class="small">{{user}}</p>
+            </div>
+            <div>
+                <p class="medium">This will allow </p>
+                <p class="text-red medium">{{grant.client.client_name}} </p>
+                <p class="medium">to:</p>
+            </div>
+            {% for scope in grant.request.scope.split(" ") %}
+                <div class="allow-block">
+                    <img src="{{url_for('static', filename='images/bullet-point.png')}}" class="image-allow">
+                    <p class="small">{{ scope }}</p>
+                </div>
+            {% endfor %}
+
+            <div>
+                <p class="medium">Make sure that you trust {{grant.client.client_name}}</p>
+            </div>
+            <div>
+                <p class="text-grey">You may be sharing sensitive info with this
+                    site or app. Find out how {{grant.client.client_name}} will handle your data by reviewing its
+                    items of service and privacy policies. You can always see or remove access in your</p>
+                <p class="text-red small">ASII account.</p>
+            </div>
+            <div>
+                <p class="text-red small">Find out about more the risks.</p>
+            </div>
+            <div class="submit-buttons">
+                <button type="submit" class="cancel"><b>Cancel</b></button>
+                <form action="" method="post">
+                    <input type="hidden" name="confirm" value="1">
+                    <button type="submit" class="allow"><b>Allow</b></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

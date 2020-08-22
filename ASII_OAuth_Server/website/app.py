@@ -1,5 +1,7 @@
 from os import environ
 from flask import Flask
+from flask_cors import CORS
+
 from .models import db
 from .oauth2 import config_oauth
 from .routes import bp
@@ -36,3 +38,4 @@ def setup_app(app):
     db.init_app(app)
     config_oauth(app)
     app.register_blueprint(bp, url_prefix='')
+    CORS(app)

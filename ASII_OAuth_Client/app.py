@@ -19,7 +19,8 @@ def setup(client_id, client_secret, scopes, authorization_uri, access_token_uri)
         "client_secret": client_secret,
         "scopes": " ".join(scopes),
         "grant_type": "authorization_code",
-        "response_type": "code"
+        "response_type": "code",
+        "api_url": "http://localhost:5000/api/me"
     }
 
 
@@ -47,7 +48,7 @@ def authorize():
         ))
 
 
-# http://localhost:5001/auth_callback?code=1d4H3fYjnJnHgUIlHnQnKAKKqYivhzoTpgqhuYJSFf1oDulg&state=asdfgh
+# http://127.0.0.1:5001/auth_callback?code=1d4H3fYjnJnHgUIlHnQnKAKKqYivhzoTpgqhuYJSFf1oDulg&state=asdfgh
 @app.route("/auth_callback", methods=["GET"])
 def auth_callback():
     """
@@ -74,8 +75,8 @@ def auth_callback():
     """
     authorization_code = request.args.get("code")
     state_val = request.args.get("state")
-    if state_val != session.get("state_val"):
-        return "Wrong state value. This could be a Man-in-the-middle attack!", 401
+    # if state_val != session.get("state_val"):
+    #     return "Wrong state value. This could be a Man-in-the-middle attack!", 401
     resp = requests.post(app_data["access_token_uri"],
                          data={
                              "grant_type": "authorization_code",
@@ -86,7 +87,9 @@ def auth_callback():
     access_token = resp.json().get("access_token")
     session["access_token"] = access_token
     resp = requests.get(app_data["api_url"], headers={"Authorization": "Bearer {}".format(access_token)})
-    return jsonify(resp.json())
+    resp_dict = resp.json()
+    resp_dict["test"] = True
+    return jsonify(resp_dict)
 
 
 if __name__ == '__main__':

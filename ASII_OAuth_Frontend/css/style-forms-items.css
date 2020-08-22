@@ -24,12 +24,15 @@
     flex-direction: column;
     justify-content: space-around;
 }
-input[type=text], input[type=password]{
+input{
     border: none;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.212);
     padding-left: 35px;
     height: 30px;
+}
+input:focus{
+    outline:none;
 }
 .icon-user{
     background-image: url(../images/user.png);

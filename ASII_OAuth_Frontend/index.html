@@ -25,7 +25,7 @@
 
             <!-- login -->
             <form id="login" class="grid-container"
-                action="http://localhost:5000/login" METHOD="post">
+                  method="POST" action="http://localhost:5000/login">
                 <div class="left-side">
                     <!-- left side -->
                     <div class="flex-logo">
@@ -44,11 +44,15 @@
                         <a href="">Forgot password?</a>
                     </div>
                 </div>
+                <input type="hidden" id="success_redirect" name="success_redirect"
+                       value="/home/radu/Documents/ASII/ASII-API/ASII_OAuth_Frontend/index.html">
+                <input type="hidden" id="fail_redirect" name="fail_redirect"
+                       value="/home/radu/Documents/ASII/ASII-API/ASII_OAuth_Frontend/index.html">
             </form>
 
             <!-- register -->
             <form id="register" class="grid-container" style="display:none;"
-                  action="http://localhost:5000/register" METHOD="post">
+                  method="POST" action="http://localhost:5000/register">
                 <div class="left-side">
                     <!-- left side -->
                     <div class="flex-logo">
@@ -59,10 +63,10 @@
                 </div>
                 <div class="right-side">
                     <!-- right side -->
-                    <input type="email" id="email" name="email" placeholder="Email adress" oninput="validateRegexEmail()"
+                    <input type="email" id="email" name="email" placeholder="Email adress"
                         class="icon-email" required>
                     <input type="password" id="pass1" name="password" placeholder="Password"
-                        pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+                        pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-,\.]).{8,}$"
                         title="
                         Must contain at least one number, at least
 one special character and at least 8  characters"
@@ -75,10 +79,15 @@ one special character and at least 8  characters"
                     <!-- down side -->
                     <button type="submit" class="submit-button">Submit</button>
                 </div>
+                <input type="hidden" id="success_redirect" name="success_redirect"
+                       value="/home/radu/Documents/ASII/ASII-API/ASII_OAuth_Frontend/index.html">
+                <input type="hidden" id="fail_redirect" name="fail_redirect"
+                       value="/home/radu/Documents/ASII/ASII-API/ASII_OAuth_Frontend/index.html">
             </form>
 
         </div>
     </div>
+    <script src="js/login_register.js"></script>
     <script>
         //function which make switch between login form and register form
         let currentPage = 'login';

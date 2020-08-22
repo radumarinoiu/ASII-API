@@ -49,9 +49,12 @@ def register():
     # departament = request.form.get("departament")
 
     if len(password) < 8:
-        return redirect("/")
+        return render_template("error.html", error="Password requires a minimum of 8 characters!")
     if password != password2:
-        return redirect("/")
+        return render_template("error.html", error="Passwords don't match!")
+
+    if User.query.filter_by(email=email).first():
+        return render_template("error.html", error="An account is already registered using this email address!")
 
     user = User(
         password=crypt(password),
@@ -69,20 +72,20 @@ def register():
     db.session.add(user)
     db.session.commit()
     session['id'] = user.id
-    return redirect('/')
+    return redirect('/oauth/authorize?' + "&".join(["{}={}".format(key, request.args[key]) for key in request.args]))
 
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("login.html", params="&".join(["{}={}".format(key, request.args[key]) for key in request.args]))
     email = request.form.get("email")
     password = request.form.get("password")
     user = User.query.filter_by(email=email).first()
     if user:
         if user.check_password(password):
             session['id'] = user.id
-            return redirect('/')
+            return redirect('/oauth/authorize?' + "&".join(["{}={}".format(key, request.args[key]) for key in request.args]))
         else:
             return jsonify({"err": "Wrong password"}), HTTPStatus.UNAUTHORIZED
     else:
@@ -96,11 +99,14 @@ def logout():
 
 
 # THIS IS A CLIENT (SERVICE) NOT A USER
-@bp.route('/create_client', methods=['POST'])
+@bp.route('/create_client', methods=['GET', 'POST'])
 def create_client():
     user = current_user()
     if not user:
         return redirect('/')
+
+    if request.method == "GET":
+        return render_template("create_client.html")
 
     client_id = gen_salt(24)
     client_id_issued_at = int(time.time())
@@ -138,6 +144,8 @@ def create_client():
 @bp.route('/oauth/authorize', methods=['GET', 'POST'])
 def authorize():
     user = current_user()
+    if not user:
+        return redirect('/login?' + "&".join(["{}={}".format(key, request.args[key]) for key in request.args]))
     if request.method == 'GET':
         try:
             grant = authorization.validate_consent_request(end_user=user)
@@ -145,9 +153,6 @@ def authorize():
             print(traceback.format_exc())
             return error.error
         return render_template('authorize.html', user=user, grant=grant)
-    if not user and 'email' in request.form:
-        email = request.form.get('email')
-        user = User.query.filter_by(email=email).first()
     if request.form['confirm']:
         # print(request.form['confirm'], user)
         grant_user = user
@@ -211,9 +216,9 @@ def members_read():
     """Return just the data specific to an ASII member."""
     user = current_token.user
     return jsonify(({
-        'profilePhoto': user.asii_members_data['profilePhoto'],
-        'role': user.asii_members_data['role'],
-        'departament':  user.asii_members_data['departament']
+        'profilePhoto': user.asii_members_data.get('profilePhoto'),
+        'role': user.asii_members_data.get('role'),
+        'departament':  user.asii_members_data.get('departament')
     })), HTTPStatus.OK
 
 

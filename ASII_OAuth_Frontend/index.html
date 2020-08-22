@@ -24,7 +24,8 @@
             </div>
 
             <!-- login -->
-            <form id="login" class="grid-container">
+            <form id="login" class="grid-container"
+                action="http://localhost:5000/login" METHOD="post">
                 <div class="left-side">
                     <!-- left side -->
                     <div class="flex-logo">
@@ -33,7 +34,7 @@
                 </div>
                 <div class="right-side">
                     <!-- right side -->
-                    <input type="text" id="email" name="email" placeholder="Email adress" class="icon-email" required>
+                    <input type="email" id="email" name="email" placeholder="Email adress" class="icon-email" required>
                     <input type="password" id="pass" name="password" placeholder="Password" class="icon-pass" required>
                 </div>
                 <div class="down-side">
@@ -46,7 +47,8 @@
             </form>
 
             <!-- register -->
-            <form id="register" class="grid-container" style="display:none;">
+            <form id="register" class="grid-container" style="display:none;"
+                  action="http://localhost:5000/register" METHOD="post">
                 <div class="left-side">
                     <!-- left side -->
                     <div class="flex-logo">
@@ -57,7 +59,7 @@
                 </div>
                 <div class="right-side">
                     <!-- right side -->
-                    <input type="text" id="email" name="email" placeholder="Email adress" oninput="validateRegexEmail()"
+                    <input type="email" id="email" name="email" placeholder="Email adress" oninput="validateRegexEmail()"
                         class="icon-email" required>
                     <input type="password" id="pass1" name="password" placeholder="Password"
                         pattern="^(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
@@ -65,8 +67,9 @@
                         Must contain at least one number, at least
 one special character and at least 8  characters"
                         oninput="validateRegexPass()" oninput="matchingPass()" class="icon-pass" required>
-                    <input type="password" id="pass2" name="password" placeholder="Validate Password" class="icon-pass"
+                    <input type="password" id="pass2" name="password2" placeholder="Validate Password" class="icon-pass"
                         oninput="matchingPass()" required>
+                    <span class="popup" id="matchingPass"></span>
                 </div>
                 <div class="down-side">
                     <!-- down side -->
@@ -101,14 +104,14 @@ one special character and at least 8  characters"
         //     if (!myInput.value.match(/[.+@.+\..+]/g))
         //         document.getElementById("regexEmail").innerHTML = 'Email is not valid.<br>';
         // }
-        // //function which confirm that the both password are the same in register
-        // function matchingPass() {
-        //     if (document.getElementById("pass1").value != document.getElementById("pass2").value) {
-        //         txt = "Passwords don't match!";
-        //         document.getElementById("matchingPass").innerText = txt;
-        //     }
-        //     else document.getElementById("matchingPass").innerText = '';
-        // }
+        // function which confirm that the both password are the same in register
+         function matchingPass() {
+             if (document.getElementById("pass1").value != document.getElementById("pass2").value) {
+                 txt = "Passwords don't match!";
+                 document.getElementById("matchingPass").innerText = txt;
+             }
+             else document.getElementById("matchingPass").innerText = '';
+        }
         // //function to verifing regex password
         // function validateRegexPass() {
         //     var myInput = document.getElementById("pass1");

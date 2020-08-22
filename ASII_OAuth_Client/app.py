@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, jsonify, redirect, request, session
 from flask_cors import CORS
-from flasgger import Swagger
 
 from ASII_OAuth_Client.oauth_handler_bp import routes as oauth_routes
 

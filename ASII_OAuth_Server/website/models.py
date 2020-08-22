@@ -14,12 +14,10 @@ SECRET_KEY = '7f09e5d8de5529701af97c5b637b445b'
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(40), unique=True)
     email = db.Column(db.String(40))
     password = db.Column(db.String())
     firstname = db.Column(db.String(40))
     lastname = db.Column(db.String(40))
-    phone = db.Column(db.String(10))
     verified = db.Column(db.Boolean())
 
     # Do what you want with this
@@ -32,7 +30,7 @@ class User(db.Model):
     ))
 
     def __str__(self):
-        return self.username
+        return self.email
 
     def get_user_id(self):
         return self.id
